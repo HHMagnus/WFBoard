@@ -2,6 +2,8 @@ var gameId;
 var leaderboards = [];
 var playerPlacements = {};
 
+window.onload = () =>beginScan('v1pgmm18');
+
 function processUpdate(update){
     document.getElementById("infoText").innerHTML = update;
 }
@@ -19,11 +21,13 @@ function aGet(theUrl, callback){
 }
 
 function beginScan(gamename){
+    console.log("started scanning");
     processUpdate("Getting game...");
 
-    document.getElementById("scanButton").hidden = true;
-    document.getElementById("infoText").hidden = false;
     document.getElementById("pointSystem").disabled = true;
+    document.getElementById("scanButton").disabled = true;
+
+    clearTable();
 
     aGet("https://www.speedrun.com/api/v1/games/" + gamename, (gameInfo) => {
         gameId = gameInfo["data"]["id"];
@@ -133,6 +137,9 @@ function getLeaderboardName(leaderboard){
 function checkLeaderboards(leaderboardList){
     processUpdate("Checking leaderboards...");
 
+    leaderboards = [];
+    playerPlacements = [];
+
     var totalBoards = leaderboardList.length;
     var boardsChecked = 0;
     var callback = () =>{
@@ -217,7 +224,7 @@ function addPlayers(){
         addPlayerToTable(placement,player["name"], player["score"]);
     });
 
-    processUpdate("Scan done!");
+    doneScanning();
 }
 
 function sortPlayers(){
@@ -231,6 +238,8 @@ function sortPlayers(){
 
 function scorePlayers(){
     processUpdate("Scoring players...");
+
+    scoredPlayers = [];
 
     let pointSystem = document.getElementById("pointSystem").value;
     let scoringMethod;
@@ -308,4 +317,28 @@ function fiftythirthytreeseventeensplit(placement){
     else{
         return 0;
     }
+}
+
+function doneScanning(){
+    processUpdate("Scan done! Last updated (" + new Date().toLocaleString() + ")");
+    document.getElementById("pointSystem").disabled = false;
+    document.getElementById("scanButton").disabled = false;
+}
+
+function pointSystemChange(){
+
+    clearTable();
+
+    scorePlayers();
+}
+
+function clearTable(){
+    let table = document.getElementById("players");
+    let rows = table.getElementsByTagName("tr");
+    let rowCount = rows.length;
+
+    for (let x = rowCount-1; x > 0; x--){
+        table.removeChild(rows[x]);
+    }
+    
 }
