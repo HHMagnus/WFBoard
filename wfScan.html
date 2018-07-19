@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Warframe Speedrun Leaderboard</title>
         <script src="scangameweb.js"></script>
         <style>
+            body{
+                text-align: center;
+            }
                 table {
                     font-family: arial, sans-serif;
                     border-collapse: collapse;
@@ -22,10 +26,17 @@
         </style>
     </head>
     <body>
-        <button type="button" onclick="scanGame('v1pgmm18')"id="scanButton">Begin scan!</button>
-        <p id="infoText">Waiting for client</p>
+        <p style="display: inline-block">Point system: </p>
+        <select id="pointSystem">
+            <option value="elite">Elite</option>
+            <option value="placement">Placement and Runs</option>
+            <option value="quasar">Quasars Way</option>
+        </select>
+        <br />
+        <button type="button" onclick="beginScan('v1pgmm18')" id="scanButton">Begin scan!</button>
+        <p id="infoText" hidden>Waiting for client</p>
 
-        <table id="levels">
+        <table id="levels" hidden>
             <tr>
                 <th>Level name</th>
                 <th>Category</th>
@@ -35,6 +46,7 @@
 
         <table id="players">
             <tr>
+                <th>Placement</th>
                 <th>Player name</th>
                 <th>Score</th>
             </tr>
