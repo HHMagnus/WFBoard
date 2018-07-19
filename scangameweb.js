@@ -2,7 +2,7 @@ var gameId;
 var leaderboards = [];
 var playerPlacements = {};
 
-window.onload = () =>beginScan('v1pgmm18');
+window.onload = () => beginScan('v1pgmm18');
 
 function processUpdate(update){
     document.getElementById("infoText").innerHTML = update;
@@ -218,10 +218,25 @@ var scoredPlayers = [];
 function addPlayers(){
     processUpdate("Adding players...");
     let placement = 0;
+    let lastScore = -1;
+    let lastPlacement = 0;
 
     scoredPlayers.forEach( (player) => {
         placement++;
-        addPlayerToTable(placement,player["name"], player["score"]);
+
+        let place = placement;
+        let score = player["score"];
+
+        if(score === lastScore){
+            place = lastPlacement;
+            console.log("double");
+        }
+
+        addPlayerToTable(place,player["name"], score);
+
+        lastPlacement = place;
+        lastScore = score;
+        
     });
 
     doneScanning();
@@ -274,9 +289,13 @@ function score(scoringMethod){
             score += scoringMethod(placement);
         });
 
-        scoredPlayers.push({"name": name, "score": score});
+        scoredPlayers.push({"name": name, "score": round(score)});
     });
     
+}
+
+function round (score){
+    return Math.round(score);
 }
 
 function elite(placement){
