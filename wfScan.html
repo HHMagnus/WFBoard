@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Warframe Speedrun Leaderboard</title>
+        <script src="scangameweb.js"></script>
+        <style>
+                table {
+                    font-family: arial, sans-serif;
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+                
+                td, th {
+                    border: 1px solid #dddddd;
+                    text-align: left;
+                    padding: 8px;
+                }
+                
+                tr:nth-child(even) {
+                    background-color: #dddddd;
+                }
+        </style>
+    </head>
+    <body>
+        <button type="button" onclick="scanGame('v1pgmm18')"id="scanButton">Begin scan!</button>
+        <p id="infoText">Waiting for client</p>
+
+        <table id="levels">
+            <tr>
+                <th>Level name</th>
+                <th>Category</th>
+                <th>Variables</th>
+            </tr>
+        </table>
+
+        <table id="players">
+            <tr>
+                <th>Player name</th>
+                <th>Score</th>
+            </tr>
+        </table>
+        
+    </body>
+</html>
