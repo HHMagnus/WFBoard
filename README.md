@@ -1,4 +1,2 @@
-# Leaderboard-for-Warframe-Speedrun
-A script that pulls data from speedrun api and makes a leaderboard for warframe
-
-Using a html site as a front pulls data from the speedrun.com/api/v1 and puts the runs into a scoring system
+# WFBoard - A ranking system for Warframe Speedruns
+WFBoard pulls data from the official Warframe Speedrun leaderboard at https://www.speedrun.com/wf and ranks players. Atm there is a few different ranking system avaialable until the community chooses a ranking system that fits well.
