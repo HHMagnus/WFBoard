@@ -20,12 +20,35 @@
 
     <title>WFBoard - Warframe Rankings</title>
 
-    <!-- The script that scans for data-->
-    <script src="scangameweb.js"></script>
+    <!-- Scripts for getting data from speedrun.com/api and displaying it-->
+    <script type="text/javascript" src="scangamedata.js"></script>
+    <script type="text/javascript" src="GameData.js"></script>
+    <script type="text/javascript" src="generalUI.js"></script>
+    <script type="text/javascript" src="rankings.js"></script>
+    <script type="text/javascript" src="rankingsUI.js"></script>
+    <script type="text/javascript" src="scoring.js"></script>
+    <script type="text/javascript" src="levels.js"></script>
+
+    <!-- Starting scripts and displaying data-->
+    <script type="text/javascript">
+        window.onload = scanGame;
+        function scanGame() {
+            wipeUI();
+            disableOptions();
+            getGameData('v1pgmm18', processUpdate, (gameData) => {
+                calculatePlayerPlacements(gameData);
+                scorePlayers();
+
+                scoreLevels(gameData);
+
+                enableOptions();
+            });
+        }
+    </script>
 
 </head>
 
-<body class="bg-dark text-center">
+<body class="bg-dark text-center" id="body">
 
     <!-- Choice for ranking system-->
     <div class="form-group d-block">
@@ -38,10 +61,48 @@
         </select>
     </div>
 
+<!-- MODAL TEMPLATE
+
+    <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#player-modal1">Insert player name</button>
+
+    <div class="modal fade" id="player-modal1" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content bg-dark">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Player name 1</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped table-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Level</th>
+                                <th scope="col">Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabker">
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Visit Profile</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+-->
+
     <!-- Infomation text and rescan button-->
     <div class="d-block">
         <p id="infoText" class="text-light d-inline">Waiting for client</p>
-        <button type="button" class="btn btn-light d-inline" onclick="beginScan('v1pgmm18')" id="scanButton" disabled>Rescan!</button>
+        <button type="button" class="btn btn-light d-inline" onclick="scanGame()" id="scanButton" disabled>Rescan!</button>
     </div>
 
     <!-- Main tabs controls-->
