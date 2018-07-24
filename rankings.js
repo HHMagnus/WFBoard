@@ -3,6 +3,8 @@ function pointSystemChange() {
     wipeUI();
 
     scorePlayers();
+
+    scoreLevels(gameData);
 }
 
 var playerPlacements = [];
@@ -21,15 +23,19 @@ function addPlayerPlacement(playerId, place, totalRuns, levelname) {
     }
 }
 
-function calculatePlayerPlacements(gameData){
+function calculatePlayerPlacements(gameData) {
     playerPlacements = [];
 
-    gameData.levels.forEach( (level) => {
-        level.subLevels.forEach( (sublevel) => {
-            if(sublevel.leaderboardInfo["runs"][0]){
-                sublevel.leaderboardInfo["runs"].forEach( (run) =>{
-                    run["run"]["players"].forEach( (player) => {
-                        addPlayerPlacement(player["id"], run["place"], sublevel.leaderboardInfo["runs"].length, sublevel.level_name);
+    gameData.levels.forEach((level) => {
+        level.subLevels.forEach((sublevel) => {
+            let playersAlreadyPlaced = [];
+            if (sublevel.leaderboardInfo["runs"][0]) {
+                sublevel.leaderboardInfo["runs"].forEach((run) => {
+                    run["run"]["players"].forEach((player) => {
+                        if (!playersAlreadyPlaced.includes(player["id"])) {
+                            addPlayerPlacement(player["id"], run["place"], sublevel.leaderboardInfo["runs"].length, sublevel.level_name);
+                            playersAlreadyPlaced.push(player["id"]);
+                        }
                     });
                 });
             }
@@ -38,14 +44,25 @@ function calculatePlayerPlacements(gameData){
     playerPlacements = Object.keys(playerPlacements).filter(k => !(k === "undefined")).map(k => { return { "id": k, "placements": playerPlacements[k] } });
 
     playerPlacements.forEach((player) => {
-        player["name"] = gameData.players.find( (element) => element["id"] === player["id"])["name"];
+        player["name"] = findPlayerName(gameData, player["id"]);
+    });
+}
+
+function findPlayerName(gameData, id) {
+    return gameData.players.find(element => element["id"] === id)["name"];
+}
+
+function scoreLevels(gameData){
+    gameData.levels.forEach( (level) => {
+        level.subLevels.forEach( (sublevel) => {
+            addLevelToTable(sublevel);
+        });
     });
 }
 
 var scoredPlayers = [];
 
 function scorePlayers() {
-    processUpdate("Scoring players...");
 
     scoredPlayers = [];
 
@@ -56,7 +73,6 @@ function scorePlayers() {
 }
 
 function sortPlayers() {
-    processUpdate("Sorting players...");
 
     scoredPlayers.sort((a, b) => b["score"] - a["score"]);
 
@@ -64,7 +80,6 @@ function sortPlayers() {
 }
 
 function addPlayers() {
-    processUpdate("Adding players...");
     let placement = 0;
     let lastScore = -1;
     let lastPlacement = 0;

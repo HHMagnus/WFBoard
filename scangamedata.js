@@ -82,7 +82,7 @@ function getGameData(gameid, progressUpdater, finish_callback) {
         progressUpdater("Sorting levels...")
         let originalSort = gameData.levelsList.map(k => k["id"]);
 
-        gameData.levels.sort((a, b) => { return originalSort.indexOf(b.rawLevelInfo["id"]) - originalSort.indexOf(a["id"]) });
+        gameData.levels.sort((a, b) => { return originalSort.indexOf(a.rawLevelInfo["id"]) - originalSort.indexOf(b.rawLevelInfo["id"]) });
 
         leaderboardInfo();
     };

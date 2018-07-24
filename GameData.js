@@ -62,5 +62,7 @@ function SubLevel(leaderboardInfo, name, category, variables){
         });
     }
 
+    this.variables_name = vars;
+
     this.level_name = name + ", " + category + ", " + vars + ".";
 }
