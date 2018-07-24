@@ -67,7 +67,7 @@ function addLevelToTable(sublevel) {
         let modal_body = createModalTableBody(createTableHeadSection(["#", "Name", "Score"]), table_body);
 
         let modal_header = createModalHeader(sublevel.name + " (" + total_runs + ")");
-        let modal_footer = createModalFooter("Visit Level", "www.speedrun.com/wf");
+        let modal_footer = createModalFooter("Visit Level",sublevel.leaderboardInfo["weblink"]);
         let modal_content = createModalContent(modal_header, modal_body, modal_footer);
 
         let modal_dialog = createModalDialog(modal_content);
