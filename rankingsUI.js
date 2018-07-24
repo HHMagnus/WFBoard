@@ -9,7 +9,9 @@ function trim(text) {
         .replaceAll("space", "spacespace").replaceAll(" ", "space")
         .replaceAll("and", "andand").replaceAll("&", "and")
         .replaceAll("colon", "coloncolon").replaceAll(":", "colon")
-        .replaceAll("procent", "procentprocent").replaceAll("%", "procent");
+        .replaceAll("procent", "procentprocent").replaceAll("%", "procent")
+        .replaceAll("left", "leftleft").replaceAll("(", "left")
+        .replaceAll("right", "rightright").replaceAll(")", "right");
 }
 
 function addPlayerToTable(tableid, modaltype, placement, name, score, placements) {
