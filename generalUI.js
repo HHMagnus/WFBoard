@@ -1,6 +1,9 @@
 function wipeUI() {
     clearTable("playersTable");
     clearTable("levelsTable");
+    clearTable("levelranking-playersTable");
+    clearTable("full_gameTable");
+    clearTable("full_gameranking-playersTable");
     clearModals();
 }
 

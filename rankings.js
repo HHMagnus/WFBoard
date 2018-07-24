@@ -113,6 +113,8 @@ var scoredCategoryPlayers = [];
 function scorePlayers() {
 
     scoredPlayers = [];
+    scoredLevelPlayers = [];
+    scoredCategoryPlayers = [];
 
     let scoringMethod = getScoringMethod();
     score(playerPlacements, scoredPlayers, scoringMethod);
