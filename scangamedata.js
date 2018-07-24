@@ -28,7 +28,6 @@ function getGameData(gameid, progressUpdater, finish_callback) {
 
     var levelsListInfo = () => {
         progressUpdater("Getting level list...");
-        console.log(gameData.levelsUrl)
         request(gameData.levelsUrl, (levelsList) => {
             gameData.levelsList = levelsList["data"];
             levelsVarAndCatInfo();
@@ -84,20 +83,64 @@ function getGameData(gameid, progressUpdater, finish_callback) {
 
         gameData.levels.sort((a, b) => { return originalSort.indexOf(a.rawLevelInfo["id"]) - originalSort.indexOf(b.rawLevelInfo["id"]) });
 
+        categoryList();
+    };
+
+    
+    var categoryList = () =>{
+        progressUpdater("Getting Full Game categories");
+
+            request(gameData.categoryUrl, (categoryList) => {
+                gameData.categoryList = categoryList["data"];
+                categoryVarInfo();
+            });
+    }
+
+    var categoryVarInfo = () => {
+        progressUpdater("Scanning full game categories");
+        gameData.categoryList = gameData.categoryList.filter(k => k["type"] === "per-game").filter(k => k["miscellaneous"] === false);
+
+        var totalCategories = gameData.categoryList.length;
+        var checkedCategories = 0;
+
+        var categoryCallback = () =>{
+            if(totalCategories === checkedCategories){
+                sortCategoriesBack();
+            }else{
+                progressUpdater("Scanning full_game categories (" + checkedCategories + "/" + totalCategories + ")");
+            }
+        }
+
+        gameData.categoryList.forEach( category => {
+            request(category["links"][2]["uri"], (categoryVarInfo) => {
+                gameData.categories.push(new FullGame(category, categoryVarInfo["data"].filter(k => k["is-subcategory"] === true)));
+                checkedCategories++;
+                categoryCallback();
+            });
+        });
+    }
+
+    var sortCategoriesBack = () =>{
+        progressUpdater("Sorting categories");
+        let originalSort = gameData.categoryList.map(k => k["id"]);
+
+        gameData.categories.sort( (a,b) => {return originalSort.indexOf(a.rawCategoryInfo["id"]) - originalSort.indexOf(b.rawCategoryInfo["id"])});
+
+        //Possibly add so that the variables also sorts out (must be done after leaderboardinfo)
         leaderboardInfo();
     };
 
     var leaderboardInfo = () => {
         progressUpdater("Checking all levels...");
 
-        var totalLevels = gameData.levels.length;
+        var totalLevels = gameData.levels.length + gameData.categoryList.length;
         var levelsChecked = 0;
 
         var callback = () => {
             if (totalLevels === levelsChecked) {
                 getPlayerNames();
             } else {
-                processUpdate("Checking leaderboards... (" + levelsChecked + "/" + totalLevels + ")");
+                progressUpdater("Checking leaderboards... (" + levelsChecked + "/" + totalLevels + ")");
             }
         };
 
@@ -130,10 +173,40 @@ function getGameData(gameid, progressUpdater, finish_callback) {
             }
 
         });
+
+        gameData.categories.forEach( category => {
+            let leaderboardList = category.getLeaderboards(gameData.id);
+
+            let totalVars = leaderboardList.length;
+            let varsChecked = 0;
+
+            var categoryback = () =>{
+                if(totalVars == varsChecked){
+                    levelsChecked++;
+                    callback();
+                }
+            }
+            
+            if(leaderboardList[0]){
+                leaderboardList.forEach( leaderboard => {
+                    request(leaderboard["url"], leaderboardInfo => {
+                        leaderboardInfo["data"]["runs"].forEach((run) => {
+                            run["run"]["players"].forEach((player) => {
+                                gameData.addPlayer(player["id"]);
+                            })
+                        });
+                        category.subcategories.push(new SubFullGame(leaderboardInfo["data"],leaderboard["name"]));
+                        varsChecked++;
+                        categoryback();
+                    });
+                });
+            }
+            else categoryback();
+        });
     };
 
     var getPlayerNames = () => {
-        processUpdate("Getting player names...");
+        progressUpdater("Getting player names...");
         gameData.players = gameData.players.filter(k => !(k === "undefined")).map (k => {return {"id": k}});
 
         var totalPlayers = gameData.players.length;
@@ -143,7 +216,7 @@ function getGameData(gameid, progressUpdater, finish_callback) {
             if (namesGotten === totalPlayers) {
                 done();
             } else {
-                processUpdate("Getting player names... (" + namesGotten + "/" + totalPlayers + ")");
+                progressUpdater("Getting player names... (" + namesGotten + "/" + totalPlayers + ")");
             }
         }
 

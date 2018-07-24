@@ -12,7 +12,7 @@ function trim(text) {
         .replaceAll("procent", "procentprocent").replaceAll("%", "procent");
 }
 
-function addPlayerToTable(placement, name, score, placements) {
+function addPlayerToTable(tableid, modaltype, placement, name, score, placements) {
     let trimmed_name = trim(name);
 
     let scoringMethod = getScoringMethod();
@@ -30,16 +30,16 @@ function addPlayerToTable(placement, name, score, placements) {
 
     let modal_dialog = createModalDialog(modal_content);
 
-    let modal_main = createModalMain("player-modal-" + trimmed_name, modal_dialog);
+    let modal_main = createModalMain(modaltype + trimmed_name, modal_dialog);
 
     document.getElementById("body").appendChild(modal_main);
 
-    let nameButton = createModalButton("#player-modal-" + trimmed_name, name);
+    let nameButton = createModalButton("#" + modaltype + trimmed_name, name);
 
-    document.getElementById("playersTable").addRow([placement, nameButton, score]);
+    document.getElementById(tableid).addRow([placement, nameButton, score]);
 }
 
-function addLevelToTable(sublevel) {
+function addLevelToTable(sublevel, tableid, modaltype) {
     console.log("level");
 
     let scoringMethod = getScoringMethod();
@@ -54,6 +54,7 @@ function addLevelToTable(sublevel) {
         let table_body = document.createElement("tbody");
 
         let total_runs = sublevel.leaderboardInfo["runs"].length;
+
 
         sublevel.leaderboardInfo["runs"].forEach((run) => {
             let players = "";
@@ -72,16 +73,15 @@ function addLevelToTable(sublevel) {
 
         let modal_dialog = createModalDialog(modal_content);
 
-        let modal_main = createModalMain("level-modal-" + trimmed_name, modal_dialog);
+        let modal_main = createModalMain(modaltype + trimmed_name, modal_dialog);
 
         document.getElementById("body").appendChild(modal_main);
 
-        nameButton = createModalButton("#level-modal-" + trimmed_name, sublevel.name);
+        nameButton = createModalButton("#"+ modaltype + trimmed_name, sublevel.name);
     } else {
         nameButton = sublevel.name;
     }
-    document.getElementById("levelsTable").addRow([nameButton, sublevel.category, sublevel.variables_name]);
-
+    document.getElementById(tableid).addRow([nameButton]);
 }
 
 /**

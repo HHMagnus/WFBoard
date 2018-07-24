@@ -77,7 +77,13 @@
             <a class="nav-link" id="levels-tab" data-toggle="tab" href="#levels" role="tab" aria-controls="levels" aria-selected="false">Levels</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" id="level-rankings-tab" data-toggle="tab" href="#level-rankings" role="tab" aria-controls="level-rankings" aria-selected="true">Level Rankings</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" id="full_game-tab" data-toggle="tab" href="#full_game" role="tab" aria-controls="full_game" aria-selected="false">Full Game</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="full_game-rankings-tab" data-toggle="tab" href="#full_game-rankings" role="tab" aria-controls="full_game-rankings" aria-selected="true">Full Game Rankings</a>
         </li>
     </ul>
 
@@ -108,9 +114,7 @@
             <table class="table table-striped table-dark">
                 <thead>
                     <tr>
-                        <th scope="col">Level name</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Variables</th>
+                        <th scope="col">Name</th>
                     </tr>
                 </thead>
                 <tbody id="levelsTable">
@@ -120,9 +124,54 @@
 
         </div>
 
+        <!-- Level Rankings tab-->
+        <div class="tab-pane" id="level-rankings" role="tabpanel" aria-labelledby="level-rankings-tab">
+
+            <table class="table table-striped table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Score</th>
+                    </tr>
+                </thead>
+                <tbody id="levelranking-playersTable">
+
+                </tbody>
+            </table>
+
+        </div>
+
         <!-- Full Game tab-->
         <div class="tab-pane" id="full_game" role="tabpanel" aria-labelledby="full_game-tab">
-            <p class="text-light">SHIT COMING SOON^TM</p>
+            <table class="table table-striped table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                    </tr>
+                </thead>
+                <tbody id="full_gameTable">
+
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Full_Game Rankings tab-->
+        <div class="tab-pane" id="full_game-rankings" role="tabpanel" aria-labelledby="full_game-rankings-tab">
+
+            <table class="table table-striped table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Score</th>
+                    </tr>
+                </thead>
+                <tbody id="full_gameranking-playersTable">
+
+                </tbody>
+            </table>
+
         </div>
     </div>
 
