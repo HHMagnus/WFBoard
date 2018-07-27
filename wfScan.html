@@ -47,6 +47,17 @@
         }
     </script>
 
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-122930669-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-122930669-1');
+    </script>
+
+
 </head>
 
 <body class="bg-dark text-center" id="body">
@@ -77,13 +88,15 @@
             <a class="nav-link" id="levels-tab" data-toggle="tab" href="#levels" role="tab" aria-controls="levels" aria-selected="false">Levels</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="level-rankings-tab" data-toggle="tab" href="#level-rankings" role="tab" aria-controls="level-rankings" aria-selected="true">Level Rankings</a>
+            <a class="nav-link" id="level-rankings-tab" data-toggle="tab" href="#level-rankings" role="tab" aria-controls="level-rankings"
+                aria-selected="true">Level Rankings</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="full_game-tab" data-toggle="tab" href="#full_game" role="tab" aria-controls="full_game" aria-selected="false">Full Game</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="full_game-rankings-tab" data-toggle="tab" href="#full_game-rankings" role="tab" aria-controls="full_game-rankings" aria-selected="true">Full Game Rankings</a>
+            <a class="nav-link" id="full_game-rankings-tab" data-toggle="tab" href="#full_game-rankings" role="tab" aria-controls="full_game-rankings"
+                aria-selected="true">Full Game Rankings</a>
         </li>
     </ul>
 
@@ -175,7 +188,9 @@
         </div>
     </div>
 
-    <footer><a href="https://github.com/HHMagnus/WFBoard">Source code</a></footer>
+    <footer>
+        <a href="https://github.com/HHMagnus/WFBoard">Source code</a>
+    </footer>
 
 </body>
 
