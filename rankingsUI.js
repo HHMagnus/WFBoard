@@ -11,7 +11,8 @@ function trim(text) {
         .replaceAll("colon", "coloncolon").replaceAll(":", "colon")
         .replaceAll("procent", "procentprocent").replaceAll("%", "procent")
         .replaceAll("left", "leftleft").replaceAll("(", "left")
-        .replaceAll("right", "rightright").replaceAll(")", "right");
+        .replaceAll("right", "rightright").replaceAll(")", "right")
+        .replaceAll("comma", "commacomma").replaceAll(",", "comma");
 }
 
 function addPlayerToTable(tableid, modaltype, placement, name, score, placements) {
