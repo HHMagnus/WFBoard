@@ -28,8 +28,14 @@ function FullGame(rawCategoryInfo, rawVariableInfo) {
 
 function getListOfAllLeaderboardsForCategory(gameId, categoryInfo, variableInfo) {
     let levelList = [];
-    //Does not support more then 1 variable
-    if (variableInfo[0]) {
+    if(variableInfo[1]){
+        let list = getVars(variableInfo, []);
+        list.forEach ( vari => {
+            let leaderboardVariableUrl = "https://www.speedrun.com/api/v1/leaderboards/" + gameId + "/category/" + categoryInfo["id"] + vari["var"];
+            levelList.push({"name": categoryInfo["name"] + ": " + vari["name"], "url": leaderboardVariableUrl});
+        });
+    }
+    else if (variableInfo[0]) {
         Object.keys(variableInfo[0]["values"]["values"]).forEach((variable) => {
             levelList.push({ "name": categoryInfo["name"] + ": " + variableInfo[0]["values"]["values"][variable]["label"], "url": "https://www.speedrun.com/api/v1/leaderboards/" + gameId + "/category/" + categoryInfo["id"] + "?var-" + variableInfo[0]["id"] + "=" + variable })
         })
@@ -62,11 +68,15 @@ function getListOfAllLeaderboardsForLevel(gameId, levelInfo, categoryInfo, varia
         let leaderboardUrl = "https://www.speedrun.com/api/v1/leaderboards/" + gameId + "/level/" + levelInfo["id"] + "/" + category["id"];
 
         if (variables[1]) {
-            console.log("Ignored category with more then 1 variable");
+            let list = getVars(variables, []);
+            list.forEach ( vari => {
+                let leaderboardVariableUrl = leaderboardUrl + vari["var"];
+                levelList.push({"name": levelInfo["name"] + " (" + category["name"] + "): " + vari["name"], "url": leaderboardVariableUrl});
+            });
         }
         else if (variables[0]) {
             Object.keys(variables[0]["values"]["values"]).forEach((value) => {
-                leaderboardVariableUrl = leaderboardUrl + "?var-" + variables[0]["id"] + "=" + value;
+                let leaderboardVariableUrl = leaderboardUrl + "?var-" + variables[0]["id"] + "=" + value;
                 levelList.push({ "name": levelInfo["name"] + " (" + category["name"] + "): " + variables[0]["values"]["values"][value]["label"], "url": leaderboardVariableUrl, "category": category["name"], "variables": [{ "name": variables[0]["name"], "value": variables[0]["values"]["values"][value]["label"] }] });
             });
         }
@@ -77,6 +87,34 @@ function getListOfAllLeaderboardsForLevel(gameId, levelInfo, categoryInfo, varia
     });
 
     return levelList;
+}
+
+function getVars(variableInfo, variablesList){
+    let newList = [];
+    Object.keys(variableInfo[0]["values"]["values"]).forEach( (value) => {
+        newList.push({"name": variableInfo[0]["values"]["values"][value]["label"],"var": "var-" + variableInfo[0]["id"] + "=" + value});
+    });
+    if(!variablesList[0]){
+        newList.forEach (value => {
+            value["var"] = "?" + value["var"];
+            variablesList.push (value);
+        })
+        
+    }else{
+        let newVarList = [];
+        newList.forEach ( value =>{
+            variablesList.forEach (oldvar => {
+                newVarList.push({"name": oldvar["name"] + ", " + value["name"], "var": oldvar["var"] + "&" + value["var"]});
+            });
+        });
+        variablesList = newVarList;
+    }
+    variableInfo.shift();
+
+    if(variableInfo[0])
+        return getVars(variableInfo,variablesList);
+    else
+        return variablesList;
 }
 
 function SubLevel(leaderboardInfo, name, category, variables) {
