@@ -1,3 +1,8 @@
+/*
+ * For future refactor, use embed for getting categories and levels with variables at once
+ * https://www.speedrun.com/api/v1/games/v1pgmm18?embed=categories.variables,levels.categories,levels.variables
+ */
+
 //GameData object
 var gameData;
 /**
@@ -126,7 +131,6 @@ function getGameData(gameid, progressUpdater, finish_callback) {
 
         gameData.categories.sort( (a,b) => {return originalSort.indexOf(a.rawCategoryInfo["id"]) - originalSort.indexOf(b.rawCategoryInfo["id"])});
 
-        //Possibly add so that the variables also sorts out (must be done after leaderboardinfo)
         leaderboardInfo();
     };
 
@@ -157,7 +161,10 @@ function getGameData(gameid, progressUpdater, finish_callback) {
             }
             if (leaderboardList[0]) {
                 leaderboardList.forEach((leaderboard) => {
-                    request(leaderboard["url"], (leaderboardInfo) => {
+                    request(leaderboard["url"] + (leaderboard["url"].includes("?") ? "&embed=players" : "?embed=players"), (leaderboardInfo) => {
+                        leaderboardInfo["data"]["players"]["data"].filter( player => player["rel"] === "user").forEach(player => {
+                            gameData.playerNames[player["id"]] = player["names"]["international"];
+                        });
                         leaderboardInfo["data"]["runs"].forEach((run) => {
                             run["run"]["players"].forEach((player) => {
                                 gameData.addPlayer(player["id"]);
@@ -189,7 +196,10 @@ function getGameData(gameid, progressUpdater, finish_callback) {
             
             if(leaderboardList[0]){
                 leaderboardList.forEach( leaderboard => {
-                    request(leaderboard["url"], leaderboardInfo => {
+                    request(leaderboard["url"] + "&embed=players", leaderboardInfo => {
+                        leaderboardInfo["data"]["players"]["data"].filter( player => player["rel"] === "user").forEach(player => {
+                            gameData.playerNames[player["id"]] = player["names"]["international"];
+                        });
                         leaderboardInfo["data"]["runs"].forEach((run) => {
                             run["run"]["players"].forEach((player) => {
                                 gameData.addPlayer(player["id"]);
@@ -209,26 +219,11 @@ function getGameData(gameid, progressUpdater, finish_callback) {
         progressUpdater("Getting player names...");
         gameData.players = gameData.players.filter(k => !(k === "undefined")).map (k => {return {"id": k}});
 
-        var totalPlayers = gameData.players.length;
-        var namesGotten = 0;
-
-        var callback = () => {
-            if (namesGotten === totalPlayers) {
-                done();
-            } else {
-                progressUpdater("Getting player names... (" + namesGotten + "/" + totalPlayers + ")");
-            }
-        }
-
-        gameData.players.forEach((player) => {
-            let url = "https://www.speedrun.com/api/v1/users/" + player["id"];
-            request(url, (playerInfo) => {
-                player["name"] = playerInfo["data"]["names"]["international"];
-                namesGotten++;
-                callback();
-            });
+        gameData.players.forEach( (player) => {
+            player["name"] = gameData.playerNames[player["id"]];
         });
 
+        done();
     };
     
     var done = () =>{
@@ -255,6 +250,9 @@ function request(theUrl, callback) {
         if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
             var response = JSON.parse(xmlHttp.responseText);
             callback(response);
+        }
+        if(xmlHttp.readyState === 4 && xmlHttp.status !== 200){
+            request(theUrl, callback);
         }
     }
     xmlHttp.open("GET", theUrl, true);

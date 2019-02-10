@@ -9,6 +9,7 @@ function GameData(rawGameInfo) {
     this.levelsList;
     this.categoryList;
     this.players = [];
+    this.playerNames = [];
     this.addPlayer = (player) => {
         if (!this.players.includes(player))
             this.players.push(player);
