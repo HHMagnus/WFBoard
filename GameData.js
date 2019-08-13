@@ -6,12 +6,7 @@ function GameData(rawGameInfo) {
     this.releaseDate = rawGameInfo["release-date"];
     this.levelsList = rawGameInfo["levels"]["data"];
     this.categoryList = rawGameInfo["categories"]["data"];
-    this.players = [];
     this.playerNames = [];
-    this.addPlayer = (player) => {
-        if (!this.players.includes(player))
-            this.players.push(player);
-    };
     this.levels = [];
     this.categories = [];
 }
@@ -101,7 +96,6 @@ function getVars(variableInfo, variablesList){
     if(variableInfo[0])
         return getVars(variableInfo,variablesList);
     else{
-        console.log(variablesList);
         return variablesList;
     }
 }

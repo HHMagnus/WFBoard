@@ -24,39 +24,47 @@ const fetchOptions = {
 function getGameData(gameid, progressUpdater) {
     return new Promise( async (resolve, reject) => {
         progressUpdater("Getting game data...");
-        let gameData = await fetchGameData(gameid);
+        let gameData = await fetchGameData(gameid).catch ( err => {
+            reject(err);
+        })
 
         progressUpdater("Scanning levels...");
-        levelsVarAndCatInfo(gameData);
+        createLevelObjects(gameData);
 
         progressUpdater("Scanning full game categories");
-        categoryVarInfo(gameData);
+        createCategoryObjects(gameData);
 
         progressUpdater("Checking all levels...");
         await leaderboardInfo(gameData);
 
-        progressUpdater("Getting player names...");
-        getPlayerNames(gameData);
-
         progressUpdater("Finished getting all data!");
+        console.log(gameData);
         resolve(gameData);
     });
 }
 
-async function fetchGameData (gameid) {
-    let response = await fetch("https://www.speedrun.com/api/v1/games/" + gameid + "?embed=levels.variables,levels.categories,categories.variables", fetchOptions);
-    let gameInfo = await response.json();
-    return new GameData(gameInfo["data"]);
+function fetchGameData (gameid) {
+    return new Promise (async (resolve, reject) => {
+        let response = await fetch("https://www.speedrun.com/api/v1/games/" + gameid + "?embed=levels.variables,levels.categories,categories.variables", fetchOptions);
+
+        if(!response.ok){
+            reject(response.status);
+        }
+
+        let gameInfo = await response.json();
+        let gameData = new GameData(gameInfo["data"]);
+        resolve(gameData);
+    });
 }
 
-function levelsVarAndCatInfo (gameData) {
+function createLevelObjects (gameData) {
     gameData.levelsList.forEach (levelInfo => {
         let level = new Level(levelInfo, levelInfo.categories, levelInfo.variables);
         gameData.levels.push(level);
     });
 }
 
-async function categoryVarInfo (gameData) {
+function createCategoryObjects (gameData) {
     // filter miscellaneous categories
     gameData.categoryList = gameData.categoryList.filter(k => k["type"] === "per-game").filter(k => k["miscellaneous"] === false);
 
@@ -82,12 +90,6 @@ async function leaderboardInfo (gameData) {
                 gameData.playerNames[player["id"]] = player["names"]["international"];
             });
 
-            json["data"]["runs"].forEach((run) => {
-                run["run"]["players"].forEach((player) => {
-                    gameData.addPlayer(player["id"]);
-                })
-            });
-
             level.subLevels.push(new SubLevel(json["data"], leaderboard["name"], leaderboard["category"], leaderboard["variables"]));
         });
 
@@ -105,12 +107,6 @@ async function leaderboardInfo (gameData) {
                 gameData.playerNames[player["id"]] = player["names"]["international"];
             });
 
-            json["data"]["runs"].forEach((run) => {
-                run["run"]["players"].forEach((player) => {
-                    gameData.addPlayer(player["id"]);
-                })
-            });
-
             category.subcategories.push(new SubFullGame(json["data"],leaderboard["name"]));
         });
 
@@ -118,12 +114,4 @@ async function leaderboardInfo (gameData) {
     })
 
     await Promise.all([...level_promises, ...category_promises])
-}
-
-function getPlayerNames (gameData) {
-    gameData.players = gameData.players.filter(k => !(k === "undefined")).map (k => {return {"id": k}});
-
-    gameData.players.forEach( (player) => {
-        player["name"] = gameData.playerNames[player["id"]];
-    });
 }

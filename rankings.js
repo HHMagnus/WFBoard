@@ -87,7 +87,8 @@ function filterUndefined(placements){
 }
 
 function findPlayerName(gameData, id) {
-    return gameData.players.find(element => element["id"] === id)["name"];
+    return gameData.playerNames[id];
+    //return gameData.players.find(element => element["id"] === id)["name"];
 }
 
 function scoreLevels(gameData) {
