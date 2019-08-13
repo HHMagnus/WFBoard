@@ -43,6 +43,10 @@
                 processUpdate("Done scanning! Last updated " + new Date().toLocaleString());
 
                 enableOptions();
+
+                document.getElementById("pointSystem").addEventListener('change', ev => {
+                    pointSystemChange(gameData);
+                });
             }). catch (err => {
                 alert("An error occured while collecting data, please reload (F5)")
             });
@@ -58,7 +62,7 @@
     <!-- Choice for ranking system-->
     <div class="form-group d-block">
         <p class="d-inline h4 text-light" for="pointSystem">Ranking system: </p>
-        <select class="d-inline form-control w-auto" id="pointSystem" onchange="pointSystemChange();" disabled>
+        <select class="d-inline form-control w-auto" id="pointSystem" disabled>
             <option value="elite">Elite</option>
             <option value="placement">Placement and Runs</option>
             <option value="quasar">Quasars Way</option>

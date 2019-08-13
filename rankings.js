@@ -1,4 +1,4 @@
-function pointSystemChange() {
+function pointSystemChange(gameData) {
 
     wipeUI();
 
