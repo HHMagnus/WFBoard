@@ -1,8 +1,3 @@
-/*
- * For future refactor, use embed for getting categories and levels with variables at once
- * https://www.speedrun.com/api/v1/games/v1pgmm18?embed=categories.variables,levels.categories,levels.variables
- */
-
 //GameData object
 var gameData;
 /**
