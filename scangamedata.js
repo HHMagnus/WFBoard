@@ -191,7 +191,7 @@ function getGameData(gameid, progressUpdater, finish_callback) {
             
             if(leaderboardList[0]){
                 leaderboardList.forEach( leaderboard => {
-                    request(leaderboard["url"] + "&embed=players", leaderboardInfo => {
+                    request(leaderboard["url"] + (leaderboard["url"].includes("?") ? "&embed=players" : "?embed=players"), leaderboardInfo => {
                         leaderboardInfo["data"]["players"]["data"].filter( player => player["rel"] === "user").forEach(player => {
                             gameData.playerNames[player["id"]] = player["names"]["international"];
                         });
