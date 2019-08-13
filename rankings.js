@@ -93,13 +93,13 @@ function findPlayerName(gameData, id) {
 function scoreLevels(gameData) {
     gameData.levels.forEach((level) => {
         level.subLevels.forEach((sublevel) => {
-            addLevelToTable(sublevel,"levelsTable","level-modal-");
+            addLevelToTable(gameData,sublevel,"levelsTable","level-modal-");
         });
     });
 
     gameData.categories.forEach( category => {
         category.subcategories.forEach( subcategory => {
-            addLevelToTable(subcategory,"full_gameTable","full_game-modal-");
+            addLevelToTable(gameData,subcategory,"full_gameTable","full_game-modal-");
         })
     })
 }

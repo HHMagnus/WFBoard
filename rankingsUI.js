@@ -42,7 +42,7 @@ function addPlayerToTable(tableid, modaltype, placement, name, score, placements
     document.getElementById(tableid).addRow([placement, nameButton, score]);
 }
 
-function addLevelToTable(sublevel, tableid, modaltype) {
+function addLevelToTable(gameData,sublevel, tableid, modaltype) {
     console.log("level");
 
     let scoringMethod = getScoringMethod();

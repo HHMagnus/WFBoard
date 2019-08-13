@@ -1,11 +1,3 @@
-//GameData object
-var gameData;
-/**
- * GameData callback information
- * @callback gameDataCallback
- * @param {GameData} gameData A game object with all the data from the given game
- */
-
 /**
  * Progress callback
  * @callback progressCallback
@@ -13,30 +5,31 @@ var gameData;
  */
 
 /**
- * Downloads all the gameinformation from speedrun.com/api
+ * Downloads all the gameinformation from speedrun.com/api.
  * @param {String} gameid The game's id on speedrun.com
  * @param {progressCallback} progressUpdater callback with progress messages
- * @param {gameDataCallback} finish_callback callback when finised getting gameinfo
+ * @returns {Promise} with a gameData object on success
  */
-async function getGameData(gameid, progressUpdater, finish_callback) {
+function getGameData(gameid, progressUpdater) {
+    return new Promise( async (resolve, reject) => {
+        progressUpdater("Getting game data...");
+        let gameData = await fetchGameData(gameid);
 
-    progressUpdater("Getting game data...");
-    gameData = await fetchGameData(gameid);
+        progressUpdater("Scanning levels...");
+        levelsVarAndCatInfo(gameData);
 
-    progressUpdater("Scanning levels...");
-    levelsVarAndCatInfo(gameData);
+        progressUpdater("Scanning full game categories");
+        categoryVarInfo(gameData);
 
-    progressUpdater("Scanning full game categories");
-    categoryVarInfo(gameData);
+        progressUpdater("Checking all levels...");
+        await leaderboardInfo(gameData);
 
-    progressUpdater("Checking all levels...");
-    await leaderboardInfo(gameData);
+        progressUpdater("Getting player names...");
+        getPlayerNames(gameData);
 
-    progressUpdater("Getting player names...");
-    getPlayerNames(gameData);
-
-    progressUpdater("Finished getting all data!");
-    finish_callback(gameData);
+        progressUpdater("Finished getting all data!");
+        resolve(gameData);
+    });
 }
 
 async function fetchGameData (gameid) {
@@ -57,7 +50,10 @@ async function categoryVarInfo (gameData) {
     gameData.categoryList = gameData.categoryList.filter(k => k["type"] === "per-game").filter(k => k["miscellaneous"] === false);
 
     gameData.categoryList.forEach (category => {
-        let data = category.variables.data.filter(k => k["is-subcategory"] === true);
+        let data = category.variables.data;
+
+        // Removes variables that is not subcategories. For example Update
+        data = data.filter(k => k["is-subcategory"] === true);
 
         gameData.categories.push(new FullGame(category, data));
     });

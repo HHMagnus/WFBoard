@@ -34,7 +34,7 @@
         function scanGame() {
             wipeUI();
             disableOptions();
-            getGameData('v1pgmm18', processUpdate, (gameData) => {
+            getGameData('v1pgmm18', processUpdate).then( (gameData) => {
                 calculatePlayerPlacements(gameData);
                 scorePlayers();
 
