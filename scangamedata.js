@@ -23,23 +23,11 @@ async function getGameData(gameid, progressUpdater, finish_callback) {
     progressUpdater("Getting game data...");
     gameData = await fetchGameData(gameid);
 
-    progressUpdater("Getting level list...");
-    await levelsListInfo(gameData);
-
     progressUpdater("Scanning levels...");
-    await levelsVarAndCatInfo(gameData);
-
-    progressUpdater("Sorting levels...")
-    sortLevelsBack(gameData);
-
-    progressUpdater("Getting Full Game categories");
-    await categoryList(gameData);
+    levelsVarAndCatInfo(gameData);
 
     progressUpdater("Scanning full game categories");
-    await categoryVarInfo(gameData);
-
-    progressUpdater("Sorting categories...");
-    sortCategoriesBack(gameData);
+    categoryVarInfo(gameData);
 
     progressUpdater("Checking all levels...");
     await leaderboardInfo(gameData);
@@ -52,63 +40,27 @@ async function getGameData(gameid, progressUpdater, finish_callback) {
 }
 
 async function fetchGameData (gameid) {
-    let response = await fetch("https://www.speedrun.com/api/v1/games/" + gameid);
+    let response = await fetch("https://www.speedrun.com/api/v1/games/" + gameid + "?embed=levels.variables,levels.categories,categories.variables");
     let gameInfo = await response.json();
     return new GameData(gameInfo["data"]);
 }
 
-async function levelsListInfo (gameData) {
-    let response = await fetch(gameData.levelsUrl);
-    let json = await response.json();
-    gameData.levelsList = json["data"];
-}
-
-async function levelsVarAndCatInfo (gameData) {
-
-    let promises = gameData.levelsList.map( async level => {
-        let categories = fetch("https://www.speedrun.com/api/v1/levels/" + level["id"] + "/categories");
-        let variables = fetch("https://www.speedrun.com/api/v1/levels/" + level["id"] + "/variables");
-
-        [categories, variables] = await Promise.all([categories, variables]);
-
-        categories = await categories.json();
-        variables = await variables.json();
-
-        gameData.levels.push(new Level(level, categories, variables));
+function levelsVarAndCatInfo (gameData) {
+    gameData.levelsList.forEach (levelInfo => {
+        let level = new Level(levelInfo, levelInfo.categories, levelInfo.variables);
+        gameData.levels.push(level);
     });
-
-    await Promise.all(promises);
-}
-
-function sortLevelsBack(gameData) {
-    let originalSort = gameData.levelsList.map(k => k["id"]);
-
-    gameData.levels.sort((a, b) => { return originalSort.indexOf(a.rawLevelInfo["id"]) - originalSort.indexOf(b.rawLevelInfo["id"]) });
-}
-
-async function categoryList (gameData) {
-    let response = await fetch(gameData.categoryUrl);
-    let json = await response.json();
-    gameData.categoryList = json["data"];
 }
 
 async function categoryVarInfo (gameData) {
     // filter miscellaneous categories
     gameData.categoryList = gameData.categoryList.filter(k => k["type"] === "per-game").filter(k => k["miscellaneous"] === false);
 
-    let promises = gameData.categoryList.map( async category => {
-        let response = await fetch(category["links"][2]["uri"]);
-        let json = await response.json();
-        let data = json["data"].filter(k => k["is-subcategory"] === true);
+    gameData.categoryList.forEach (category => {
+        let data = category.variables.data.filter(k => k["is-subcategory"] === true);
+
         gameData.categories.push(new FullGame(category, data));
-    })
-
-    await Promise.all(promises);
-}
-
-function sortCategoriesBack (gameData) {
-    let originalSort = gameData.categoryList.map(k => k["id"]);
-    gameData.categories.sort( (a,b) => {return originalSort.indexOf(a.rawCategoryInfo["id"]) - originalSort.indexOf(b.rawCategoryInfo["id"])});
+    });
 }
 
 async function leaderboardInfo (gameData) {

@@ -4,10 +4,8 @@ function GameData(rawGameInfo) {
     this.name = rawGameInfo["names"]["international"];
     this.abbreviation = rawGameInfo["abbreviation"];
     this.releaseDate = rawGameInfo["release-date"];
-    this.levelsUrl = rawGameInfo["links"][2]["uri"];
-    this.categoryUrl = rawGameInfo["links"][3]["uri"];
-    this.levelsList;
-    this.categoryList;
+    this.levelsList = rawGameInfo["levels"]["data"];
+    this.categoryList = rawGameInfo["categories"]["data"];
     this.players = [];
     this.playerNames = [];
     this.addPlayer = (player) => {
