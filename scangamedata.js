@@ -1,3 +1,14 @@
+const fetchOptions = {
+    method: 'GET',
+    mode: 'cors',
+    cache: 'no-cache',
+    credentials: 'omit',
+    headers: {
+        'User-Agent': 'wf-rankings',
+    },
+    redirect: 'follow',
+    referrer: 'no-referrer'
+};
 /**
  * Progress callback
  * @callback progressCallback
@@ -33,7 +44,7 @@ function getGameData(gameid, progressUpdater) {
 }
 
 async function fetchGameData (gameid) {
-    let response = await fetch("https://www.speedrun.com/api/v1/games/" + gameid + "?embed=levels.variables,levels.categories,categories.variables");
+    let response = await fetch("https://www.speedrun.com/api/v1/games/" + gameid + "?embed=levels.variables,levels.categories,categories.variables", fetchOptions);
     let gameInfo = await response.json();
     return new GameData(gameInfo["data"]);
 }
@@ -64,7 +75,7 @@ async function leaderboardInfo (gameData) {
         let leaderboardList = level.getLeaderboards(gameData.id);
 
         let promises = leaderboardList.map( async leaderboard => {
-            let response = await fetch(leaderboard["url"] + (leaderboard["url"].includes("?") ? "&embed=players" : "?embed=players"));
+            let response = await fetch(leaderboard["url"] + (leaderboard["url"].includes("?") ? "&embed=players" : "?embed=players"), fetchOptions);
             let json = await response.json();
 
             json["data"]["players"]["data"].filter( player => player["rel"] === "user").forEach(player => {
@@ -87,7 +98,7 @@ async function leaderboardInfo (gameData) {
         let leaderboardList = category.getLeaderboards(gameData.id);
 
         let promises = leaderboardList.map (async leaderboard => {
-            let response = await fetch(leaderboard["url"] + (leaderboard["url"].includes("?") ? "&embed=players" : "?embed=players"));
+            let response = await fetch(leaderboard["url"] + (leaderboard["url"].includes("?") ? "&embed=players" : "?embed=players"), fetchOptions);
             let json = await response.json();
 
             json["data"]["players"]["data"].filter( player => player["rel"] === "user").forEach(player => {
