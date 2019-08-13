@@ -36,18 +36,16 @@ function addPlayerCategoryPlacement(playerId, place, totalRuns, levelname) {
     addPlayerPlacement(categoryPlayerPlacements, playerId, place, totalRuns, levelname);
 }
 
-function leaderboardcalculator(leaderboard, leaderboard_name, addfunction) {
+function leaderboardcalculator(leaderboard, addfunction) {
     let playersAlreadyPlaced = [];
-    if (leaderboard["runs"][0]) {
-        leaderboard["runs"].forEach(run => {
-            run["run"]["players"].forEach(player => {
-                if (!playersAlreadyPlaced.includes(player["id"])) {
-                    addfunction(player["id"], run["place"], leaderboard["runs"].length, leaderboard_name);
-                    playersAlreadyPlaced.push(player["id"]);
-                }
-            });
-        });
-    }
+    leaderboard.runs.forEach(run => {
+        run.players.forEach(player => {
+            if(!playersAlreadyPlaced.includes(player)) {
+                addfunction(player, run.place, leaderboard.total_runs, leaderboard.name);
+                playersAlreadyPlaced.push(player);
+            }
+        })
+    })
 }
 
 function calculatePlayerPlacements(gameData) {
@@ -56,53 +54,26 @@ function calculatePlayerPlacements(gameData) {
     categoryPlayerPlacements = [];
 
     gameData.levels.forEach((level) => {
-        level.subLevels.forEach((sublevel) => {
-            leaderboardcalculator(sublevel.leaderboardInfo, sublevel.name, addPlayerLevelPlacement);
-        });
+        leaderboardcalculator(level, addPlayerLevelPlacement);
     });
 
     gameData.categories.forEach(category => {
-        category.subcategories.forEach(subcategory => {
-            leaderboardcalculator(subcategory.leaderboardInfo, subcategory.name, addPlayerCategoryPlacement);
-        });
+        leaderboardcalculator(category, addPlayerCategoryPlacement);
     });
     
-    playerPlacements = filterUndefined(playerPlacements);
-    levelPlayerPlacements = filterUndefined(levelPlayerPlacements);
-    categoryPlayerPlacements = filterUndefined(categoryPlayerPlacements);
-
-    playerPlacements.forEach((player) => {
-        player["name"] = findPlayerName(gameData, player["id"]);
-    });
-    levelPlayerPlacements.forEach((player) => {
-        player["name"] = findPlayerName(gameData, player["id"]);
-    });
-    categoryPlayerPlacements.forEach((player) => {
-        player["name"] = findPlayerName(gameData, player["id"]);
-    });
-}
-
-function filterUndefined(placements){
-    return Object.keys(placements).filter(k => !(k === "undefined")).map(k => { return { "id": k, "placements": placements[k] } })
-}
-
-function findPlayerName(gameData, id) {
-    return gameData.playerNames[id];
-    //return gameData.players.find(element => element["id"] === id)["name"];
+    delete playerPlacements.undefined;
+    delete levelPlayerPlacements.undefined;
+    delete categoryPlayerPlacements.undefined;
 }
 
 function scoreLevels(gameData) {
-    gameData.levels.forEach((level) => {
-        level.subLevels.forEach((sublevel) => {
-            addLevelToTable(gameData,sublevel,"levelsTable","level-modal-");
-        });
+    gameData.levels.forEach(level => {
+        addLevelToTable(level, "levelsTable", "level-modal-")
     });
 
-    gameData.categories.forEach( category => {
-        category.subcategories.forEach( subcategory => {
-            addLevelToTable(gameData,subcategory,"full_gameTable","full_game-modal-");
-        })
-    })
+    gameData.categories.forEach(category => {
+        addLevelToTable(category, "full_gameTable", "full_game-modal-");
+    });
 }
 
 var scoredPlayers = [];
@@ -117,6 +88,8 @@ function scorePlayers() {
     scoredLevelPlayers = [];
     scoredCategoryPlayers = [];
 
+    console.log(playerPlacements);
+
     let scoringMethod = getScoringMethod();
     score(playerPlacements, scoredPlayers, scoringMethod);
     score(levelPlayerPlacements, scoredLevelPlayers, scoringMethod);
@@ -130,6 +103,8 @@ function sortPlayers() {
     scoredPlayers.sort((a, b) => b["score"] - a["score"]);
     scoredLevelPlayers.sort((a, b) => b["score"] - a["score"]);
     scoredCategoryPlayers.sort((a, b) => b["score"] - a["score"]);
+
+    console.log(scoredPlayers);
 
     addPlayers(scoredPlayers,addPlayerToTable, "playersTable", "player-modal-");
     addPlayers(scoredLevelPlayers,addPlayerToTable ,"levelranking-playersTable", "player-level-modal-");
@@ -160,16 +135,15 @@ function addPlayers(scoredplayers, addfunction, tableid, modaltype) {
 }
 
 function score(placements, scores, scoringMethod) {
-    placements.forEach((player) => {
-        let name = player["name"];
+    for(player in placements) {
         let score = 0;
 
-        player["placements"].forEach((placement) => {
+        placements[player].forEach((placement) => {
             score += scoringMethod(placement);
         });
 
-        scores.push({ "name": name, "score": round(score), "placements": player["placements"] });
-    });
+        scores.push({ "name": player, "score": round(score), "placements": placements[player] });
+    }
 
 }
 

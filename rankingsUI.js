@@ -16,6 +16,7 @@ function trim(text) {
 }
 
 function addPlayerToTable(tableid, modaltype, placement, name, score, placements) {
+    console.log("player");
     let trimmed_name = trim(name);
 
     let scoringMethod = getScoringMethod();
@@ -42,36 +43,31 @@ function addPlayerToTable(tableid, modaltype, placement, name, score, placements
     document.getElementById(tableid).addRow([placement, nameButton, score]);
 }
 
-function addLevelToTable(gameData,sublevel, tableid, modaltype) {
+function addLevelToTable(level, tableid, modaltype) {
     console.log("level");
 
     let scoringMethod = getScoringMethod();
 
     let nameButton;
 
-    if (sublevel.leaderboardInfo["runs"][0]) {
+    if (level.total_runs > 0) {
 
-        let trimmed_name = trim(sublevel.name + sublevel.category + sublevel.variables_name);
+        let trimmed_name = trim(level.name);
 
 
         let table_body = document.createElement("tbody");
 
-        let total_runs = sublevel.leaderboardInfo["runs"].length;
+        let total_runs = level.total_runs;
 
 
-        sublevel.leaderboardInfo["runs"].forEach((run) => {
-            let players = "";
-            run["run"]["players"].forEach((player) => {
-                let name = findPlayerName(gameData, player["id"]);
-                players += name + ", ";
-            })
-            players = players.slice(0, -2);
-            table_body.addRow([run["place"], players, scoringMethod(toPlacement(run["place"], total_runs))]);
+        level.runs.forEach((run) => {
+            let players = run.players.join (", ")
+            table_body.addRow([run.place, players, scoringMethod(toPlacement(run["place"], total_runs))]);
         });
         let modal_body = createModalTableBody(createTableHeadSection(["#", "Name", "Score"]), table_body);
 
-        let modal_header = createModalHeader(sublevel.name + " (" + total_runs + ")");
-        let modal_footer = createModalFooter("Visit Level",sublevel.leaderboardInfo["weblink"]);
+        let modal_header = createModalHeader(level.name + " (" + total_runs + ")");
+        let modal_footer = createModalFooter("Visit Level", level.link);
         let modal_content = createModalContent(modal_header, modal_body, modal_footer);
 
         let modal_dialog = createModalDialog(modal_content);
@@ -80,9 +76,9 @@ function addLevelToTable(gameData,sublevel, tableid, modaltype) {
 
         document.getElementById("body").appendChild(modal_main);
 
-        nameButton = createModalButton("#"+ modaltype + trimmed_name, sublevel.name);
+        nameButton = createModalButton("#"+ modaltype + trimmed_name, level.name);
     } else {
-        nameButton = sublevel.name;
+        nameButton = level.name;
     }
     document.getElementById(tableid).addRow([nameButton]);
 }

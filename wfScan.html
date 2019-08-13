@@ -35,6 +35,7 @@
             wipeUI();
             disableOptions();
             getGameData('v1pgmm18', processUpdate).then( (gameData) => {
+                console.log(gameData);
                 calculatePlayerPlacements(gameData);
                 scorePlayers();
 
@@ -47,8 +48,10 @@
                 document.getElementById("pointSystem").addEventListener('change', ev => {
                     pointSystemChange(gameData);
                 });
-            }). catch (err => {
-                alert("An error occured while collecting data, please reload (F5)")
+            })
+            . catch (err => {
+                alert("An error occured while collecting data, please reload (F5)");
+                console.error(err);
             });
         }
     </script>
@@ -57,7 +60,7 @@
 <body class="bg-dark text-center" id="body">
 
     <!-- Report bug -->
-    <a class="btn btn-secondary bton-lg active position-fixed" style="right: 0px" role="button" aria-pressed="true" href="https://github.com/HHMagnus/WFBoard/issues/new">Report a bug</a>
+    <a class="btn btn-secondary bton-lg active position-absolute" style="right: 0px" role="button" aria-pressed="true" href="https://github.com/HHMagnus/WFBoard/issues/new">Report a bug</a>
 
     <!-- Choice for ranking system-->
     <div class="form-group d-block">

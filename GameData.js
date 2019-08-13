@@ -9,6 +9,60 @@ function GameData(rawGameInfo) {
     this.playerNames = [];
     this.levels = [];
     this.categories = [];
+
+    this.getAllRelevantData = () => {
+        return {
+            id: this.id,
+            name: this.name,
+            levels: formatLevels(this.levels, this.playerNames),
+            categories: formatCategories(this.categories, this.playerNames),
+            players: formatPlayers(this.playerNames)
+        };
+    }
+}
+
+function formatLevels(levels, playerNames) {
+    return levels.flatMap(level => {
+        return level.subLevels.map( subLevel => {
+            return formatLeaderboard(subLevel, playerNames);
+        });
+    });
+}
+
+function formatCategories(categories, playerNames) {
+    return categories.flatMap(category => {
+        return category.subcategories.map ( subCategory => {
+            return formatLeaderboard(subCategory, playerNames);
+        });
+    });
+}
+
+function formatLeaderboard (leaderboard, playerNames) {
+    return {
+        name: leaderboard.name,
+        link: leaderboard.weblink,
+        runs: leaderboard.leaderboardInfo.runs.map( run => {
+            return {
+                place: run.place,
+                comment: run.run.comment,
+                date: run.run.date,
+                players: run.run.players
+                    .map( player => {
+                        return playerNames[player.id]
+                })
+            }
+        }),
+        total_runs: leaderboard.leaderboardInfo.runs.length
+    }
+}
+
+
+function formatPlayers(playerNames){
+    let players = [];
+    for (id in playerNames){
+        players.push(playerNames[id]);
+    }
+    return players;
 }
 
 function FullGame(rawCategoryInfo, rawVariableInfo) {
