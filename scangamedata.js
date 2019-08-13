@@ -35,26 +35,21 @@ function getGameData(gameid, progressUpdater) {
         createCategoryObjects(gameData);
 
         progressUpdater("Checking all levels...");
-        await leaderboardInfo(gameData);
+        await leaderboardInfo(gameData).catch(err => {
+            reject(err);
+        });
 
         progressUpdater("Finished getting all data!");
-        console.log(gameData);
         resolve(gameData);
     });
 }
 
-function fetchGameData (gameid) {
-    return new Promise (async (resolve, reject) => {
-        let response = await fetch("https://www.speedrun.com/api/v1/games/" + gameid + "?embed=levels.variables,levels.categories,categories.variables", fetchOptions);
+async function fetchGameData (gameid) {
+    let response = await fetch("https://www.speedrun.com/api/v1/games/" + gameid + "?embed=levels.variables,levels.categories,categories.variables", fetchOptions);
+    let gameInfo = await response.json();
 
-        if(!response.ok){
-            reject(response.status);
-        }
-
-        let gameInfo = await response.json();
-        let gameData = new GameData(gameInfo["data"]);
-        resolve(gameData);
-    });
+    let gameData = new GameData(gameInfo["data"]);
+    return gameData;
 }
 
 function createLevelObjects (gameData) {
@@ -79,39 +74,70 @@ function createCategoryObjects (gameData) {
 }
 
 async function leaderboardInfo (gameData) {
-    let level_promises = gameData.levels.map (async level => {
-        let leaderboardList = level.getLeaderboards(gameData.id);
+    let levels = addAllLevels(gameData);
 
-        let promises = leaderboardList.map( async leaderboard => {
-            let response = await fetch(leaderboard["url"] + (leaderboard["url"].includes("?") ? "&embed=players" : "?embed=players"), fetchOptions);
-            let json = await response.json();
+    let categories = addAllCategories(gameData);
 
-            json["data"]["players"]["data"].filter( player => player["rel"] === "user").forEach(player => {
-                gameData.playerNames[player["id"]] = player["names"]["international"];
-            });
-
-            level.subLevels.push(new SubLevel(json["data"], leaderboard["name"], leaderboard["category"], leaderboard["variables"]));
-        });
-
-        await Promise.all(promises);
+    await Promise.all([levels, categories])
+}
+async function addAllLevels (gameData) {
+    let promises = gameData.levels.map ( async level => {
+        await addSubLevels(gameData, level);
     });
+    await Promise.all(promises);
+}
 
-    let category_promises = gameData.categories.map( async category => {
-        let leaderboardList = category.getLeaderboards(gameData.id);
+async function addSubLevels (gameData, level) {
+    let leaderboardList = level.getLeaderboards(gameData.id);
 
-        let promises = leaderboardList.map (async leaderboard => {
-            let response = await fetch(leaderboard["url"] + (leaderboard["url"].includes("?") ? "&embed=players" : "?embed=players"), fetchOptions);
-            let json = await response.json();
+    let promises = leaderboardList.map ( async leaderboard => {
+        await addSubLevel(gameData, level, leaderboard);
+    });
+    await Promise.all(promises);
+}
 
-            json["data"]["players"]["data"].filter( player => player["rel"] === "user").forEach(player => {
-                gameData.playerNames[player["id"]] = player["names"]["international"];
-            });
+async function addSubLevel (gameData, level, leaderboard) {
+    let json = await fetchLeaderboard(leaderboard);
 
-            category.subcategories.push(new SubFullGame(json["data"],leaderboard["name"]));
-        });
+    addPlayerNamesToGameData(json, gameData);
 
-        await Promise.all (promises);
+    let subLevel = new SubLevel(json, leaderboard["name"], leaderboard["category"], leaderboard["variables"]);
+    level.subLevels.push(subLevel);
+}
+
+async function addAllCategories (gameData) {
+    let promises = gameData.categories.map( async category => {
+        await addSubCategories(gameData, category);
     })
+    await Promise.all(promises);
+}
 
-    await Promise.all([...level_promises, ...category_promises])
+async function addSubCategories (gameData, category) {
+    let leaderboardList = category.getLeaderboards(gameData.id);
+
+    let promises = leaderboardList.map( async leaderboard => {
+        addSubCategory(gameData, category, leaderboard);
+    });
+    await Promise.all(promises);
+}
+
+async function addSubCategory (gameData, category, leaderboard) {
+    let json = await fetchLeaderboard(leaderboard);
+
+    addPlayerNamesToGameData(json, gameData);
+
+    let subFullGame = new SubFullGame(json, leaderboard["name"]);
+    category.subcategories.push(subFullGame);
+}
+
+async function fetchLeaderboard (leaderboard) {
+    let response = await fetch(leaderboard["url"] + (leaderboard["url"].includes("?") ? "&embed=players" : "?embed=players"), fetchOptions);
+    let json = await response.json();
+    return json["data"];
+}
+
+function addPlayerNamesToGameData(data, gameData) {
+    data["players"]["data"].filter(player => player["rel"] === "user").forEach(player => {
+        gameData.playerNames[player.id] = player.names.international;
+    });
 }
