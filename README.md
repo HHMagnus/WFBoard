@@ -8,7 +8,7 @@ WFBoard pulls data from the official Warframe Speedrun leaderboard at https://ww
 
 Technical Details
 --
-Speedrun.com API uses a JSON-based REST API, calls are done via HTTPS. Every call to the API is done in scangamedata.js, where a GameData object is created (GameData.js describes this object). rankings.js is organising the data onto the site. Files ending in UI is used to control the UI, scoring.js returns different higher order functions the scores can be distributed by.
+Speedrun.com API uses a JSON-based REST API, and calls are done via HTTPS. Every call to the API is done in scangamedata.js, where a GameData object is created (GameData.js describes this object). rankings.js is organising the data onto the site. Files ending in UI is used to control the UI, scoring.js returns different higher order functions the scores can be distributed by.
 
 Future optimizations and upgrades
 --
