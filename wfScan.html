@@ -43,11 +43,9 @@
                 processUpdate("Done scanning! Last updated " + new Date().toLocaleString());
 
                 enableOptions();
-            })
-            // .catch (err => {
-            //     alert("An error occured. TODO")
-            //     console.log(err);
-            // });
+            }). catch (err => {
+                alert("An error occured while collecting data, please reload (F5)")
+            });
         }
     </script>
 </head>

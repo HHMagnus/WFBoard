@@ -40,6 +40,7 @@ function getGameData(gameid, progressUpdater) {
         });
 
         progressUpdater("Finished getting all data!");
+        console.log(gameData);
         resolve(gameData);
     });
 }
@@ -116,7 +117,7 @@ async function addSubCategories (gameData, category) {
     let leaderboardList = category.getLeaderboards(gameData.id);
 
     let promises = leaderboardList.map( async leaderboard => {
-        addSubCategory(gameData, category, leaderboard);
+        await addSubCategory(gameData, category, leaderboard);
     });
     await Promise.all(promises);
 }
