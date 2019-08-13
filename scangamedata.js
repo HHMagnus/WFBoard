@@ -35,7 +35,7 @@ function getGameData(gameid, progressUpdater) {
         createCategoryObjects(gameData);
 
         progressUpdater("Checking all levels...");
-        await leaderboardInfo(gameData).catch(err => {
+        await fetchAllLeaderboards(gameData).catch(err => {
             reject(err);
         });
 
@@ -74,7 +74,7 @@ function createCategoryObjects (gameData) {
     });
 }
 
-async function leaderboardInfo (gameData) {
+async function fetchAllLeaderboards (gameData) {
     let levels = addAllLevels(gameData);
 
     let categories = addAllCategories(gameData);
