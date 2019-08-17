@@ -1,14 +1,4 @@
-const fetchOptions = {
-    method: 'GET',
-    mode: 'cors',
-    cache: 'no-cache',
-    credentials: 'omit',
-    headers: {
-        'User-Agent': 'rankings-site',
-    },
-    redirect: 'follow',
-    referrer: 'no-referrer'
-};
+import fetchOptions from '/scripts/fetchOptions.js';
 
 const fuzzyOptions = {
     shouldSort: true,
