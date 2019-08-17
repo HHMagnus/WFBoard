@@ -40,6 +40,7 @@ function getGameData(gameid, progressUpdater) {
         });
 
         progressUpdater("Finished getting all data!");
+        console.log(gameData);
         resolve(gameData.getAllRelevantData());
     });
 }
