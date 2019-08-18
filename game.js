@@ -22,5 +22,10 @@ async function start() {
 start();
 
 function populateView (json){
+    
     console.log(json);
+
+    removeLoader();
 }
+
+function removeLoader() { document.querySelector("overlay").style.display = "none"; }

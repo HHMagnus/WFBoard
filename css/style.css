@@ -1,0 +1,15 @@
+body {
+    background: lightsteelblue;
+    font-family: sans-serif;
+}
+
+main {
+    max-width: 1000px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin:auto;
+    border: 0.5px solid grey;
+    border-radius: 5px;
+}
