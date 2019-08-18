@@ -49,6 +49,9 @@ export default (json) => {
     json.categories = json.categories.map ( formatVariables );
 
     // removes level categories from category list
+    json.level_categories = json.categories.filter (category => {
+        return category.type == "per-level";
+    })
     json.categories = json.categories.filter (category => {
         return category.type == "per-game";
     });

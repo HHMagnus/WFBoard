@@ -16,7 +16,11 @@ async function start() {
 
     await fetchLeaderboards(json);
 
-    console.log(json);
+    populateView(json);
 }
 
 start();
+
+function populateView (json){
+    console.log(json);
+}
