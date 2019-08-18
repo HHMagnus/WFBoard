@@ -14,8 +14,6 @@ async function start() {
 
     generateLeaderboards(json);
 
-    console.log(json);
-
     await fetchLeaderboards(json);
 
     console.log(json);
