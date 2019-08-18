@@ -3,6 +3,7 @@ import fetchOptions from '/scripts/fetchOptions.js';
 import formatGameJson from '/scripts/formatGameJson.js';
 import { generateLeaderboards, fetchLeaderboards } from '/scripts/leaderboards.js';
 import extractPlayers from '/scripts/extractPlayers.js';
+import calculateRankings from '/scripts/calculateRankings.js';
 
 async function start() {
     let url_params = getJsonFromUrl();
@@ -14,10 +15,11 @@ async function start() {
     json = formatGameJson(json);
 
     generateLeaderboards(json);
-
     await fetchLeaderboards(json);
 
     json.players = extractPlayers(json);
+
+    calculateRankings(json);
 
     populateView(json);
 }

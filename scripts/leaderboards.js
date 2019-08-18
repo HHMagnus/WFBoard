@@ -36,6 +36,36 @@ function get_variable_string (combination) {
     return variable_string;
 }
 
+function generateVariableNames (leaderboard, level) {
+    return leaderboard.variables.map( variable => {
+        let label = level.variables.find(vari => vari.id == variable.id).values.find(value => value.value == variable.value).label;
+        return label;
+    }).join (" - ");
+}
+
+function generateNames(json) {
+    json.categories = json.categories.map ( category => {
+        category.leaderboards = category.leaderboards.map (leaderboard => {
+            let name = category.name;
+            name += ": " + generateVariableNames(leaderboard, category);
+            leaderboard.name = name;
+            return leaderboard;
+        });
+        return category;
+    });
+
+    json.levels = json.levels.map (level => {
+        level.leaderboards = level.leaderboards.map (leaderboard => {
+            let category_name = level.categories.find(category => category.id == leaderboard.category).name;
+            name = "(" + category_name + ") " + level.name;
+            name += ": " + generateVariableNames(leaderboard, level);
+            leaderboard.name = name;
+            return leaderboard;
+        });
+        return level;
+    })
+}
+
 function generateLeaderboards ( json ) {
     json.categories = json.categories.map (category => {
 
@@ -85,6 +115,9 @@ function generateLeaderboards ( json ) {
 
         return level;
     });
+
+    generateNames(json);
+
     return json;
 }
 
