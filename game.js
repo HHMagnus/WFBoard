@@ -2,6 +2,7 @@ import {getJsonFromUrl } from '/scripts/parseUrlParams.js';
 import fetchOptions from '/scripts/fetchOptions.js';
 import formatGameJson from '/scripts/formatGameJson.js';
 import { generateLeaderboards, fetchLeaderboards } from '/scripts/leaderboards.js';
+import extractPlayers from '/scripts/extractPlayers.js';
 
 async function start() {
     let url_params = getJsonFromUrl();
@@ -15,6 +16,8 @@ async function start() {
     generateLeaderboards(json);
 
     await fetchLeaderboards(json);
+
+    json.players = extractPlayers(json);
 
     populateView(json);
 }

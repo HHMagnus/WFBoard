@@ -95,6 +95,7 @@ async function fetchLeaderboardsWithPlayers ( json ) {
         let leaderboard_promises = level.leaderboards.map ( async leaderboard => {
             let response = await fetch(leaderboard.link + "&embed=players", fetchOptions);
             leaderboard.data = (await response.json()).data;
+            leaderboard.data.players = leaderboard.data.players.data;
             return leaderboard;
         });
         level.leaderboards = await Promise.all(leaderboard_promises);
