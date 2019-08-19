@@ -29,7 +29,7 @@
 
         <div class="tab" id="personal">
             <h1>Personal rankings:</h1>
-            <table>
+            <table id="personal_table">
                 <thead>
                     <tr>
                         <th id="personal_th_name">Name</th>
@@ -43,23 +43,24 @@
                     
                 </tbody>
             </table>
-        </div>
 
-        <template id="playerView">
-            <tr>
-                <td class="player_name"></td>
-                <td class="level_score"></td>
-                <td class="full_game_score"></td>
-                <td class="overall_score"></td>
-            </tr>
-        </template>
+            <template id="playerView">
+                <tr>
+                    <td class="player_name"></td>
+                    <td class="level_score"></td>
+                    <td class="full_game_score"></td>
+                    <td class="overall_score"></td>
+                </tr>
+            </template>
+        </div>
+        
 
         <div class="tab" id="level">
-
+            <h1>Levels:</h1>
         </div>
 
         <div class="tab" id="full_game">
-
+            <h1>Full Game:</h1>
         </div>
     </main>
 </body>

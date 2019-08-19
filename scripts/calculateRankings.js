@@ -20,6 +20,41 @@ function calculateLeaderboardScoresAndAdd(playerRanks, runScores, score_field_na
     }
 }
 
+function formatPlayerRanksToArray (playerRanks) {
+    return Object.keys(playerRanks).map (key => {
+        playerRanks[key].id = key;
+        return playerRanks[key];
+    }).filter (rank => rank.id != "undefined");
+}
+
+function addOverallScore (playerRanks) {
+    return playerRanks.map (rank => {
+        rank.overall_score = rank.level_score + rank.full_game_score;
+        return rank;
+    });
+}
+
+function givePlacement(playerRanks, score_name, place_name) {
+    playerRanks.sort( (a,b) => b[score_name] - a[score_name]);
+    let score = playerRanks[0][score_name];
+    let total = 0;
+    let place = 1;
+    playerRanks.forEach(rank =>{
+        total++;
+
+        rank[place_name] = rank[score_name] == score ? place : total;
+
+        place = rank[place_name];
+        score = rank[score_name];
+    });
+}
+
+function givePlacements(playerRanks) {
+    givePlacement(playerRanks, "level_score", "level_place");
+    givePlacement(playerRanks, "full_game_score", "full_game_place");
+    givePlacement(playerRanks, "overall_score", "overall_place");
+} 
+
 export default (json) => {
     let playerRanks = {};
     json.players.forEach (player => {
@@ -35,6 +70,12 @@ export default (json) => {
 
     json.categories.flatMap(category => category.leaderboards).forEach ( calculateLeaderboardScoresAndAdd(playerRanks, runScores, "full_game_score", "full_game_runs") );
     json.levels.flatMap(level => level.leaderboards).forEach( calculateLeaderboardScoresAndAdd(playerRanks, runScores, "level_score", "level_runs") );
+
+    playerRanks = formatPlayerRanksToArray(playerRanks);
+
+    playerRanks = addOverallScore(playerRanks);
+
+    givePlacements(playerRanks);
 
     return {playerRanks, runScores};
 }
