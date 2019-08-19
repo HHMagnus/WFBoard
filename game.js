@@ -23,6 +23,10 @@ async function start() {
     let {playerRanks, runScores} = calculateRankings(json);
 
     populateView(json, playerRanks, runScores);
+
+    console.log(json);
+    console.log(playerRanks);
+    console.log(runScores);
 }
 
 start();
