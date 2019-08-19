@@ -27,6 +27,8 @@ async function start() {
     console.log(json);
     console.log(playerRanks);
     console.log(runScores);
+
+    sorttable.makeSortable(document.querySelector("table"));
 }
 
 start();
