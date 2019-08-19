@@ -4,6 +4,7 @@ import formatGameJson from '/scripts/formatGameJson.js';
 import { generateLeaderboards, fetchLeaderboards } from '/scripts/leaderboards.js';
 import extractPlayers from '/scripts/extractPlayers.js';
 import calculateRankings from '/scripts/calculateRankings.js';
+import populateView from '/scripts/populateView.js';
 
 async function start() {
     let url_params = getJsonFromUrl();
@@ -19,18 +20,9 @@ async function start() {
 
     json.players = extractPlayers(json);
 
-    calculateRankings(json);
+    let {playerRanks, runScores} = calculateRankings(json);
 
-    populateView(json);
+    populateView(json, playerRanks, runScores);
 }
 
 start();
-
-function populateView (json){
-    
-    console.log(json);
-
-    removeLoader();
-}
-
-function removeLoader() { document.querySelector("overlay").style.display = "none"; }
