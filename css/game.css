@@ -33,6 +33,10 @@ hr {
 }
 
 .tab {
+    display: none;
+}
+
+.tab[active] {
     display: flex;
     flex-direction: column;
     align-items: center;

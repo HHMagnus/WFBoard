@@ -1,8 +1,7 @@
 const personal_tbody = document.querySelector("#personal_tbody");
 const playerViewTemplate = document.querySelector("#playerView");
-export default (json, playerRanks, runScores) => {
-    removeLoader();
 
+function populatePersonalRankings (json, playerRanks) {
     playerRanks.forEach (rank => {
         let player = json.players.find (player => player.id == rank.id);
         let player_name = player.names.international;
@@ -10,7 +9,10 @@ export default (json, playerRanks, runScores) => {
 
         let playerView = document.importNode(playerViewTemplate.content, true);
 
-        playerView.querySelector(".player_name").innerText = player_name;
+        let player_element = document.createElement("a");
+        player_element.href = player_profile;
+        player_element.innerText = player_name;
+        playerView.querySelector(".player_name").appendChild(player_element);
 
         let level_score =  playerView.querySelector(".level_score");
         level_score.innerText = rank.level_score + " (#" + rank.level_place + ")";
@@ -27,6 +29,17 @@ export default (json, playerRanks, runScores) => {
         personal_tbody.appendChild(playerView);
 
     });
+
+    sorttable.makeSortable(document.querySelector("#personal_table"));
+}
+
+
+
+export default (json, playerRanks, runScores) => {
+
+    populatePersonalRankings(json,playerRanks);
+
+    removeLoader();
 }
 
 function removeLoader() { document.querySelector("overlay").style.display = "none"; }

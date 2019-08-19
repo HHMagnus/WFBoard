@@ -5,6 +5,7 @@ import { generateLeaderboards, fetchLeaderboards } from '/scripts/leaderboards.j
 import extractPlayers from '/scripts/extractPlayers.js';
 import calculateRankings from '/scripts/calculateRankings.js';
 import populateView from '/scripts/populateView.js';
+import active_tabs from '/scripts/active_tabs.js';
 
 async function start() {
     let url_params = getJsonFromUrl();
@@ -14,6 +15,8 @@ async function start() {
     let json = await response.json();
 
     json = formatGameJson(json);
+
+    document.querySelector("title").innerHTML = json.names.international + " rankings";
 
     generateLeaderboards(json);
     await fetchLeaderboards(json);
@@ -28,7 +31,7 @@ async function start() {
     console.log(playerRanks);
     console.log(runScores);
 
-    sorttable.makeSortable(document.querySelector("#personal_table"));
+    active_tabs();
 }
 
 start();
