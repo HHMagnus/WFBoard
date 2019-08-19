@@ -120,17 +120,25 @@ function generateLeaderboards ( json ) {
 
         let all_variable_combinations = get_all_variable_combinations([...level.variables], []);
 
-        level.leaderboards = all_variable_combinations.flatMap (combination =>{
-            let variable_string = get_variable_string(combination);
+        level.leaderboards = level.categories.flatMap (category => {
 
-            return level.categories.map (category => {
+            if(all_variable_combinations.length < 1) {
+                return {
+                    category: category.id,
+                    variables: [],
+                    link: link + "/" + category.id + "?"
+                }
+            }
+
+            return all_variable_combinations.map(combination => {
+                let variable_string = get_variable_string(combination);
                 let link_combined = link + "/" + category.id + "?" + variable_string;
                 return {
                     category: category.id,
                     variables: combination,
                     link: link_combined
-                };
-            });
+                }
+            })
         });
 
         return level;
