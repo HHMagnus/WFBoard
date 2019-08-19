@@ -66,6 +66,26 @@ function generateNames(json) {
     })
 }
 
+function generateIds (json) {
+    let id = 0;
+    json.categories = json.categories.map (category => {
+        category.leaderboards = category.leaderboards.map (leaderboard => {
+            leaderboard.id = "c" + id++;
+            return leaderboard;
+        });
+        return category;
+    });
+
+    id = 0;
+    json.levels = json.levels.map (level => {
+        level.leaderboards = level.leaderboards.map ( leaderboard => {
+            leaderboard.id = "l" + id++;
+            return leaderboard;
+        });
+        return level;
+    });
+}
+
 function generateLeaderboards ( json ) {
     json.categories = json.categories.map (category => {
 
@@ -117,6 +137,7 @@ function generateLeaderboards ( json ) {
     });
 
     generateNames(json);
+    generateIds(json);
 
     return json;
 }
@@ -141,5 +162,6 @@ async function fetchLeaderboards ( json ) {
     json.categories = await fetchLeaderboardsWithPlayers (json.categories);
     json.levels = await fetchLeaderboardsWithPlayers (json.levels);
 }
+
 
 export { generateLeaderboards, fetchLeaderboards };
