@@ -33,10 +33,7 @@ function populatePersonalRankings (json, playerRanks) {
     sorttable.makeSortable(document.querySelector("#personal_table"));
 }
 
-
-
 export default (json, playerRanks, runScores) => {
-
     populatePersonalRankings(json,playerRanks);
 
     removeLoader();
