@@ -34,17 +34,17 @@ function populatePersonalRankings (json, playerRanks) {
 
         let player_element = playerLinkView(rank.id, json.players);
         playerView.querySelector(".player_name").appendChild(player_element);
-
+        
         let level_score =  playerView.querySelector(".level_score");
-        level_score.innerText = rank.level_score + " (#" + rank.level_place + ")";
+        level_score.innerText = rank.level_place + " (" + rank.level_score + " point)";
         level_score.setAttribute("sorttable_customkey", rank.level_score);
-
+        
         let full_game_score = playerView.querySelector(".full_game_score");
-        full_game_score.innerText = rank.full_game_score + " (#" + rank.full_game_place + ")";
+        full_game_score.innerText = rank.full_game_place + " (" + rank.full_game_score + " point)";
         full_game_score.setAttribute("sorttable_customkey", rank.full_game_score);
-
+        
         let overall_score = playerView.querySelector(".overall_score")
-        overall_score.innerText = rank.overall_score + " (#" + rank.overall_place + ")";
+        overall_score.innerText = rank.overall_place + " (" + rank.overall_score + " point)";
         overall_score.setAttribute("sorttable_customkey", rank.overall_place);
 
         personal_tbody.appendChild(playerView);
