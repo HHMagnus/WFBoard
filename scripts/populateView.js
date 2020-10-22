@@ -53,25 +53,6 @@ function populatePersonalRankings (json, playerRanks) {
 
     sorttable.makeSortable(document.querySelector("#personal_table"));
 }
-function populateLevels(json, runScores) {
-    json.levels.forEach(level => {
-        level.leaderboards.forEach(leaderboard => {
-            // Insert run
-            let levelView = document.importNode(levelViewTemplate.content, true);
-            let level_button = document.createElement("a");
-            level_button.addEventListener('click', () => {
-                showLeaderboardOverlay(json, leaderboard, runScores);
-            });
-            level_button.innerText = leaderboard.name;
-            level_button.href = "#" + leaderboard.name;
-
-            let level_name = levelView.querySelector(".level_name");
-            level_name.appendChild(level_button);
-
-            level_tbody.append(levelView);
-        });
-    });
-}
 
 function showLeaderboardOverlay(json, leaderboard, runScores) {
     // Insert overview
@@ -103,12 +84,34 @@ function showLeaderboardOverlay(json, leaderboard, runScores) {
     document.body.appendChild(levelOverlayView);
 }
 
+function populateLevels(json, runScores) {
+    json.levels.forEach(level => {
+        level.leaderboards.forEach(leaderboard => {
+            // Insert run
+            let levelView = document.importNode(levelViewTemplate.content, true);
+            let level_button = document.createElement("a");
+            level_button.addEventListener('click', (ev) => {
+                ev.preventDefault();
+                showLeaderboardOverlay(json, leaderboard, runScores);
+            });
+            level_button.innerText = leaderboard.name;
+            level_button.href = "#" + leaderboard.name;
+
+            let level_name = levelView.querySelector(".level_name");
+            level_name.appendChild(level_button);
+
+            level_tbody.append(levelView);
+        });
+    });
+}
+
 function populateFullGame(json, runScores) {
     json.categories.forEach(category => {
         category.leaderboards.forEach(leaderboard => {
             let fullGameView = document.importNode(fullGameViewTemplate.content, true);
             let full_game_button = document.createElement("a");
-            full_game_button.addEventListener('click', () => {
+            full_game_button.addEventListener('click', (ev) => {
+                ev.preventDefault();
                 showLeaderboardOverlay(json, leaderboard, runScores);
             });
             full_game_button.innerText = leaderboard.name;
