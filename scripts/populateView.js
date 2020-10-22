@@ -58,6 +58,9 @@ function showLeaderboardOverlay(json, leaderboard, runScores) {
     // Insert overview
     let levelOverlayView = document.importNode(leaderboardOverlayViewTemplate.content, true);
 
+    let level_name = levelOverlayView.querySelector(".level_name");
+    level_name.innerText = leaderboard.name;
+
     let level_runs = levelOverlayView.querySelector(".level_runs");
     leaderboard.data.runs.forEach(run => {
         let levelScoresView = document.importNode(leaderboardScoreViewTemplate.content, true);
