@@ -76,7 +76,7 @@ function clearGamesList() { list.innerHTML = ""; }
 
 function addGameTab (game){
     let link = document.createElement("a");
-    link.href = getLink(game.id);
+    link.href = getLink(game.abbreviation);
     link.innerText = game.names.international;
 
     appendGame(link);
