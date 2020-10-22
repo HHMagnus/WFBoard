@@ -1,15 +1,29 @@
 body {
-    background: lightsteelblue;
-    font-family: sans-serif;
+    background: #212529;
+    font-family: helvetica;
+    color: lightgrey;
 }
 
 main {
     max-width: 1000px;
-    background: #fff;
+    background: #313539;
     display: flex;
     align-items: center;
     flex-direction: column;
     margin:auto;
     border: 0.5px solid grey;
     border-radius: 5px;
+}
+
+hr {
+    background-color: lightgrey;
+    color: lightgrey;
+}
+
+table {
+    border-color: lightgrey;
+}
+
+a, a:visited{
+    color: #007bff;
 }
