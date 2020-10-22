@@ -19,3 +19,4 @@ Future optimizations and upgrades
 --
 Possible optimizations and upgrades to the code:
   - possibility to make custom scoring system without editing code.
+  - Backup files, in case API is down
