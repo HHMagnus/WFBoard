@@ -1,7 +1,6 @@
 overlay {
     position: fixed;
     width: 100%;
-    width: 100%;
     top: 0;
     left: 0; 
     right: 0;
@@ -21,4 +20,6 @@ overlay div {
     padding: 25px;
     margin: 15px;
     border-radius: 5px;
+    max-height: 90%;
+    overflow: auto;
 }

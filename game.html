@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -11,8 +12,9 @@
 
     <script type="module" src="game.js"></script>
 </head>
+
 <body>
-    <overlay>
+    <overlay id="loader">
         <div>
             <h1>Loading content...</h1>
             <div class="loader"></div>
@@ -32,15 +34,15 @@
             <table id="personal_table">
                 <thead>
                     <tr>
-                        <th id="personal_th_name">Name</th>
-                        <th id="personal_th_level">Level</th>
-                        <th id="personal_th_full_game">Full Game</th>
-                        <th id="personal_th_overall">Overall</th>
+                        <th>Name</th>
+                        <th>Level</th>
+                        <th>Full Game</th>
+                        <th>Overall</th>
                     </tr>
                 </thead>
 
                 <tbody id="personal_tbody">
-                    
+
                 </tbody>
             </table>
 
@@ -53,14 +55,76 @@
                 </tr>
             </template>
         </div>
-        
+
 
         <div class="tab" id="level">
             <h1>Levels:</h1>
+            <table class="sorttable_nosort">
+                <thead>
+                    <tr>
+                        <th>Level</th>
+                    </tr>
+                </thead>
+
+                <tbody id="level_tbody">
+
+                </tbody>
+            </table>
+
+            <template id="levelView">
+                <tr>
+                    <td class="level_name"></td>
+                </tr>
+            </template>
         </div>
 
         <div class="tab" id="full_game">
             <h1>Full Game:</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Full game</th>
+                    </tr>
+                </thead>
+
+                <tbody id="full_game_tbody">
+
+                </tbody>
+            </table>
+
+            <template id="fullGameView">
+                <tr>
+                    <td class="name"></td>
+                </tr>
+            </template>
         </div>
     </main>
+
+    <template id="leaderboardOverlayView">
+        <overlay class="level_overlay" onclick="if(event.target == this) this.remove()">
+            <div>
+                <table class="sorttable_nosort">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Player</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody class="level_runs">
+
+                    </tbody>
+                </table>
+                <a href="#" class="visit_level">Visit level</a>
+            </div>
+        </overlay>
+    </template>
+
+    <template id="leaderboardScoreView">
+        <tr>
+            <td class="place"></td>
+            <td class="player_name"></td>
+            <td class="score"></td>
+        </tr>
+    </template>
 </body>
