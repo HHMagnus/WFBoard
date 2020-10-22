@@ -80,6 +80,11 @@ function showLeaderboardOverlay(json, leaderboard, runScores) {
 
         level_runs.appendChild(levelScoresView);
     });
+    
+    if(leaderboard.data.runs.length == 0) {
+        let no_runs = levelOverlayView.querySelector(".no_runs");
+        no_runs.style.display = "block";
+    }
 
     let visit_level = levelOverlayView.querySelector(".visit_level");
     visit_level.href = leaderboard.data.weblink;

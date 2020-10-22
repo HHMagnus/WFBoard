@@ -116,7 +116,13 @@
 
                     </tbody>
                 </table>
-                <a href="#" class="visit_level">Visit level</a>
+                <p style="text-align: center; display: none;" class="no_runs">No runs</p>
+                <div style="display:flex; flex-direction: row; justify-content: space-between; width:100%">
+                    <a></a>
+                    <a href="#" class="visit_level">Visit level</a>
+                    <a href="#" onclick="event.preventDefault();this.parentNode.parentNode.parentNode.remove()">Close</a>
+                </div>
+                
             </div>
         </overlay>
     </template>
