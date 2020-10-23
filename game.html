@@ -39,6 +39,7 @@
 
         <hr>
 
+        <!-- Personal rankings-->
         <div class="tab" id="personal" active>
             <h1>Personal rankings:</h1>
             <table id="personal_table">
@@ -66,7 +67,7 @@
             </template>
         </div>
 
-
+        <!-- Level rankings -->
         <div class="tab" id="level">
             <h1>Levels:</h1>
             <table>
@@ -88,6 +89,7 @@
             </template>
         </div>
 
+        <!-- Full game rankings -->
         <div class="tab" id="full_game">
             <h1>Full Game:</h1>
             <table>
@@ -110,6 +112,7 @@
         </div>
     </main>
 
+    <!-- Leaderboard overlay view -->
     <template id="leaderboardOverlayView">
         <overlay onclick="if(event.target == this) this.remove()">
             <div style="min-width: 75%;">
@@ -145,6 +148,7 @@
         </tr>
     </template>
 
+    <!-- Personal overlay view -->
     <template id="personalOverlayView">
         <overlay onclick="if(event.target == this) this.remove()">
             <div style="min-width: 75%;">
