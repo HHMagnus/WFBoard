@@ -172,9 +172,15 @@ function populateFullGame(json, runScores) {
             let full_game_name = fullGameView.querySelector(".name");
             full_game_name.appendChild(full_game_button);
 
+            let runs = fullGameView.querySelector('.runs');
+            runs.innerText = leaderboard.data.runs.length;
+
             full_game_tbody.append(fullGameView);
         });
     });
+
+    let full_game_table = document.querySelector(".full_game_table");
+    sorttable.makeSortable(full_game_table);
 }
 
 export default (json, playerRanks, runScores) => {
