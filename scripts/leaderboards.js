@@ -47,7 +47,8 @@ function generateNames(json) {
     json.categories = json.categories.map ( category => {
         category.leaderboards = category.leaderboards.map (leaderboard => {
             let name = category.name;
-            name += ": " + generateVariableNames(leaderboard, category);
+            let variable_names = generateVariableNames(leaderboard, category);
+            if(variable_names != "") name += ": " + variable_names;
             leaderboard.name = name;
             return leaderboard;
         });
@@ -58,7 +59,8 @@ function generateNames(json) {
         level.leaderboards = level.leaderboards.map (leaderboard => {
             let category_name = level.categories.find(category => category.id == leaderboard.category).name;
             let name = "(" + category_name + ") " + level.name;
-            name += ": " + generateVariableNames(leaderboard, level);
+            let variable_names = generateVariableNames(leaderboard, level);
+            if(variable_names != "") name += ": " + variable_names;
             leaderboard.name = name;
             return leaderboard;
         });
@@ -118,9 +120,9 @@ function generateLeaderboards ( json ) {
         link = split.join("/");
         level.link = link;
 
-        let all_variable_combinations = get_all_variable_combinations([...level.variables], []);
-
         level.leaderboards = level.categories.flatMap (category => {
+            let relevant_variables = level.variables.filter(variable => variable.category == category.id);
+            let all_variable_combinations = get_all_variable_combinations([...relevant_variables], []);
 
             if(all_variable_combinations.length < 1) {
                 return {
