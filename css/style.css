@@ -28,3 +28,12 @@ a, a:visited{
     color: #007bff;
     text-decoration: none;
 }
+
+.report-bug {
+    right: 5px;
+    position: fixed;
+    border: 0.5px solid lightgrey;
+    background: #313539;
+    border-radius: 5px;
+    padding: 7px;
+}
