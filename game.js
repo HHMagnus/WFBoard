@@ -9,10 +9,12 @@ async function start() {
     let gameid = url_params.game;
     let data = {};
 
+    // Fetch all data
     try {
         data = await fetchAll(gameid, (x, y) => fetch(x, y));
         await store_in_localStorage(gameid, data);
     } catch (err) {
+        // Try to load localStorage if online is unavailable
         try {
             console.log("Load from localStorage")
             let fromLocalStorage = await load_from_localStorage(gameid);
@@ -25,13 +27,15 @@ async function start() {
 
     let { json, record_date } = data;
 
-    let { playerRanks, runScores } = calculateRankings(json);
-
+    // Set fields for game
     record_date = new Date(record_date);
     const title = json.names.international + " rankings";
     document.querySelector("title").innerHTML = title;
     document.querySelector("#title").innerText = title;
     document.querySelector("#record_date").innerText = "("+record_date.toLocaleString()+")";
+
+    // Calculate ranking
+    let { playerRanks, runScores } = calculateRankings(json);
 
     populateView(json, playerRanks, runScores);
 
