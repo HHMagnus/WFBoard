@@ -151,9 +151,15 @@ function populateLevels(json, runScores) {
             let level_name = levelView.querySelector(".level_name");
             level_name.appendChild(level_button);
 
+            let runs = levelView.querySelector('.runs');
+            runs.innerText = leaderboard.data.runs.length;
+
             level_tbody.append(levelView);
         });
     });
+
+    let level_table = document.querySelector(".level_table");
+    sorttable.makeSortable(level_table);
 }
 
 function populateFullGame(json, runScores) {
