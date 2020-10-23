@@ -26,4 +26,5 @@ table {
 
 a, a:visited{
     color: #007bff;
+    text-decoration: none;
 }
