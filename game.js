@@ -2,6 +2,7 @@ import { getJsonFromUrl } from '/scripts/parseUrlParams.js';
 import populateView from '/scripts/populateView.js';
 import active_tabs from '/scripts/active_tabs.js';
 import fetchAll from './scripts/fetchAll.js';
+import calculateRankings from './scripts/calculateRankings.js';
 
 async function start() {
     let url_params = getJsonFromUrl();
@@ -22,7 +23,9 @@ async function start() {
         }
     }
 
-    let { json, playerRanks, runScores, record_date } = data;
+    let { json, record_date } = data;
+
+    let { playerRanks, runScores } = calculateRankings(json);
 
     record_date = new Date(record_date);
     const title = json.names.international + " rankings";
