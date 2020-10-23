@@ -13,20 +13,9 @@ const leaderboardScoreViewTemplate = document.querySelector("#leaderboardScoreVi
 const personalOverlayViewTemplate = document.querySelector("#personalOverlayView");
 const personalScoreViewTemplate = document.querySelector('#personalScoreView');
 
-function playerLinkView(player_id, players) {
-    let player = players.find (player => player.id == player_id);
-    let player_name = "Unknown";
-    let player_profile = "#";
-    if(player.rel == "guest") {
-        player_name = player.name;
-        player_profile = player.uri;
-    } else {
-        player_name = player.names.international;
-        player_profile = player.weblink;
-    }
-
-    let player_element = document.createElement("a");
-    player_element.href = player_profile;
+function playerLinkView(player_name, player_profile) {
+    let player_element = player_profile != undefined ? document.createElement("a") : document.createElement('span');
+    if(player_profile) player_element.href = player_profile;
     player_element.innerText = player_name;
     return player_element;
 }
@@ -69,7 +58,11 @@ function populatePersonalRankings (json, playerRanks, runScores) {
     playerRanks.forEach (rank => {
         let playerView = document.importNode(playerViewTemplate.content, true);
 
-        let player_element = playerLinkView(rank.id, json.players);
+        let player = json.players.find (player => player.id == rank.id);
+        let player_element = player.rel == 'guest' ? 
+            playerLinkView(player.name) 
+            : playerLinkView(player.names.international, player.weblink);
+        
         player_element.href = "#";
         player_element.addEventListener('click', ev => {
             ev.preventDefault();
@@ -105,6 +98,7 @@ function showLeaderboardOverlay(json, leaderboard, runScores) {
     level_name.innerText = leaderboard.name;
 
     let level_runs = levelOverlayView.querySelector(".level_runs");
+    let previously_seen_players = [];
     leaderboard.data.runs.forEach(run => {
         let levelScoresView = document.importNode(leaderboardScoreViewTemplate.content, true);
 
@@ -113,9 +107,19 @@ function showLeaderboardOverlay(json, leaderboard, runScores) {
 
         let player_name = levelScoresView.querySelector(".player_name");
         run.run.players.forEach(player => {
-            let player_element = playerLinkView(player.id, json.players);
+            let name = player.name;
+            let uri = undefined;
+            if(player.rel == 'user') {
+                const playerDetails = json.players.find(x => x.id == player.id);
+                name = playerDetails.names.international;
+                uri = playerDetails.weblink;
+            }
+            let player_element = playerLinkView(name, uri);
             player_element.style.marginLeft = "8px";
+            if(previously_seen_players.includes(name)) player_element.style.textDecoration = 'line-through';
             player_name.appendChild(player_element)
+
+            previously_seen_players.push(name);
         });
 
         let score = levelScoresView.querySelector(".score");
