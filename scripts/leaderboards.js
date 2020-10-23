@@ -57,7 +57,7 @@ function generateNames(json) {
     json.levels = json.levels.map (level => {
         level.leaderboards = level.leaderboards.map (leaderboard => {
             let category_name = level.categories.find(category => category.id == leaderboard.category).name;
-            name = "(" + category_name + ") " + level.name;
+            let name = "(" + category_name + ") " + level.name;
             name += ": " + generateVariableNames(leaderboard, level);
             leaderboard.name = name;
             return leaderboard;
@@ -150,12 +150,12 @@ function generateLeaderboards ( json ) {
     return json;
 }
 
-import fetchOptions from '/scripts/fetchOptions.js';
+import fetchOptions from './fetchOptions.js';
 
-async function fetchLeaderboardsWithPlayers ( json ) {
+async function fetchLeaderboardsWithPlayers ( json , get) {
     let promises = json.map(async level => {
         let leaderboard_promises = level.leaderboards.map ( async leaderboard => {
-            let response = await fetch(leaderboard.link + "&embed=players", fetchOptions);
+            let response = await get(leaderboard.link + "&embed=players", fetchOptions);
             leaderboard.data = (await response.json()).data;
             leaderboard.data.players = leaderboard.data.players.data;
             return leaderboard;
@@ -166,9 +166,9 @@ async function fetchLeaderboardsWithPlayers ( json ) {
     return await Promise.all(promises);
 }
 
-async function fetchLeaderboards ( json ) {
-    json.categories = await fetchLeaderboardsWithPlayers (json.categories);
-    json.levels = await fetchLeaderboardsWithPlayers (json.levels);
+async function fetchLeaderboards ( json, get ) {
+    json.categories = await fetchLeaderboardsWithPlayers (json.categories, get);
+    json.levels = await fetchLeaderboardsWithPlayers (json.levels, get);
 }
 
 
