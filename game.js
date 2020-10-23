@@ -15,16 +15,20 @@ async function start() {
         try {
             console.log("Load from localStorage")
             let fromLocalStorage = await load_from_localStorage(gameid);
-            date = JSON.parse(fromLocalStorage);
+            data = JSON.parse(fromLocalStorage);
         } catch (err2) {
             alert("The API has denied your request because of a rate limit. Please try again later!")
             return;
         }
     }
 
-    let { json, playerRanks, runScores } = data;
+    let { json, playerRanks, runScores, record_date } = data;
 
-    document.querySelector("title").innerHTML = json.names.international + " rankings";
+    record_date = new Date(record_date);
+    const title = json.names.international + " rankings";
+    document.querySelector("title").innerHTML = title;
+    document.querySelector("#title").innerText = title;
+    document.querySelector("#record_date").innerText = "("+record_date.toLocaleString()+")";
 
     populateView(json, playerRanks, runScores);
 
@@ -54,7 +58,6 @@ async function load_from_localStorage(gameid) {
     let bits = await localforage.getItem(gameid + "_bits");
 
     for(let i = 0; i < bits; i++) {
-        console.log("Bit get " + i);
         let bit = await localforage.getItem(gameid + "_bit" + i);
         result += bit;
     }
