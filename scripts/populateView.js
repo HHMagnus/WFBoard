@@ -146,7 +146,7 @@ function populateLevels(json, runScores) {
                 showLeaderboardOverlay(json, leaderboard, runScores);
             });
             level_button.innerText = leaderboard.name;
-            level_button.href = "#" + leaderboard.name;
+            level_button.href = "#";
 
             let level_name = levelView.querySelector(".level_name");
             level_name.appendChild(level_button);
@@ -166,7 +166,7 @@ function populateFullGame(json, runScores) {
                 showLeaderboardOverlay(json, leaderboard, runScores);
             });
             full_game_button.innerText = leaderboard.name;
-            full_game_button.href = "#" + leaderboard.name;
+            full_game_button.href = "#";
 
 
             let full_game_name = fullGameView.querySelector(".name");
