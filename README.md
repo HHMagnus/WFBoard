@@ -19,5 +19,5 @@ Future optimizations and upgrades
 --
 Possible optimizations and upgrades to the code:
   - possibility to make custom scoring system without editing code.
-  - Backup files, in case API is down
+  - Backup files online incase API rate limits (/workflow contains Node.js code to do so)
   - Personal overview of single player

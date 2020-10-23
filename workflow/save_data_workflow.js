@@ -9,7 +9,7 @@ async function saveIt(gameid) {
 
     let dataStr = JSON.stringify(data);
 
-    fs.writeFileSync("data.json", dataStr);
+    fs.writeFileSync("../wf_data.json", dataStr);
 }
 
 saveIt("wf");
