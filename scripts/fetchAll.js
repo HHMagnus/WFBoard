@@ -16,5 +16,5 @@ export default async function (gameid, get) {
 
     let { playerRanks, runScores } = calculateRankings(json);
 
-    return { json, playerRanks, runScores };
+    return { json, playerRanks, runScores, record_date: new Date(Date.now()) };
 }
