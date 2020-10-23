@@ -29,6 +29,11 @@ a, a:visited{
     text-decoration: none;
 }
 
+a:hover {
+    text-decoration: underline;
+    color: lightgrey;
+}
+
 .report-bug {
     right: 5px;
     position: fixed;
@@ -36,8 +41,4 @@ a, a:visited{
     background: #313539;
     border-radius: 5px;
     padding: 7px;
-}
-
-.report-bug:hover {
-    color: lightblue;
 }

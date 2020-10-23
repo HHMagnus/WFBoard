@@ -11,12 +11,13 @@ nav h2 {
     margin-right: 25px;
 
     color: #007bff;
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 nav h2:hover {
     cursor: pointer;
-    color: purple;
+    color: lightgrey;
+    text-decoration: underline;
 }
 
 nav h2[active] {
