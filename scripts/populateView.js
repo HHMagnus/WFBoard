@@ -10,6 +10,9 @@ const fullGameViewTemplate = document.querySelector("#fullGameView");
 const leaderboardOverlayViewTemplate = document.querySelector("#leaderboardOverlayView");
 const leaderboardScoreViewTemplate = document.querySelector("#leaderboardScoreView");
 
+const personalOverlayViewTemplate = document.querySelector("#personalOverlayView");
+const personalScoreViewTemplate = document.querySelector('#personalScoreView');
+
 function playerLinkView(player_id, players) {
     let player = players.find (player => player.id == player_id);
     let player_name = "Unknown";
@@ -28,11 +31,48 @@ function playerLinkView(player_id, players) {
     return player_element;
 }
 
-function populatePersonalRankings (json, playerRanks) {
+function showPlayerOverlay(player, rank, runScores) {
+    const personalOverlayView = document.importNode(personalOverlayViewTemplate.content, true);
+
+    const player_name = personalOverlayView.querySelector(".player_name");
+    player_name.innerText = player.rel == 'guest' ? player.name : player.names.international;
+
+    const runs = personalOverlayView.querySelector(".runs");
+
+    const addRun = (type) => (run) => {
+        const runDetails = runScores[run];
+        const runView = document.importNode(personalScoreViewTemplate.content, true);
+
+        runView.querySelector('.place').innerText = runDetails.place;
+        runView.querySelector('.type').innerText = type;
+        runView.querySelector('.leaderboard_name').innerText = runDetails.leaderboard_name;
+        runView.querySelector('.score').innerText = runDetails.score;
+
+        runs.appendChild(runView);
+    }
+    rank.full_game_runs.forEach(addRun('Full Game'));
+    rank.level_runs.forEach(addRun('Level'));
+
+    const visit_profile = personalOverlayView.querySelector('.visit_profile');
+    visit_profile.href = player.rel == 'guest' ? player.uri : player.weblink;
+    
+    const runs_table = personalOverlayView.querySelector('.runs_table');
+    sorttable.makeSortable(runs_table);
+
+    document.body.appendChild(personalOverlayView);
+}
+
+function populatePersonalRankings (json, playerRanks, runScores) {
     playerRanks.forEach (rank => {
         let playerView = document.importNode(playerViewTemplate.content, true);
 
         let player_element = playerLinkView(rank.id, json.players);
+        player_element.href = "#";
+        player_element.addEventListener('click', ev => {
+            ev.preventDefault();
+            const player = json.players.find (player => player.id == rank.id);
+            showPlayerOverlay(player, rank, runScores);
+        })
         playerView.querySelector(".player_name").appendChild(player_element);
         
         let level_score =  playerView.querySelector(".level_score");
@@ -135,7 +175,7 @@ function populateFullGame(json, runScores) {
 }
 
 export default (json, playerRanks, runScores) => {
-    populatePersonalRankings(json,playerRanks);
+    populatePersonalRankings(json, playerRanks, runScores);
     populateLevels(json, runScores);
     populateFullGame(json, runScores);
 

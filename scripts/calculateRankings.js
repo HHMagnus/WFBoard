@@ -6,6 +6,7 @@ function calculateLeaderboardScoresAndAdd(playerRanks, runScores, score_field_na
             playersAlreadyScoredForLeaderboard.push(...players.map(player => player.id));
             let run_score = score(run.place, leaderboard.data.runs.length);
             runScores[run.run.id] = {
+                place: run.place,
                 score: run_score,
                 leaderboard_name: leaderboard.name,
                 web_link: run.run.weblink

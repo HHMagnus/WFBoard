@@ -21,7 +21,7 @@ nav h2:hover {
 
 nav h2[active] {
     cursor: auto;
-    color: black;
+    color: lightgrey;
     text-decoration: none;
 }
 
