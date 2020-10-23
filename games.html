@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" href="css/games.css">
+
+    <title>Speedrun Ranking Board</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.4.5/fuse.min.js"></script>
+    <script type="module" src="games.js"></script>
+
+</head>
+
+<body>
+    <overlay>
+        <div style="overflow:hidden !important;">
+            <h1>Searching for games...</h1>
+            <div class="loader"></div>
+        </div>
+    </overlay>
+    <main>
+        <h1>Which game do you wanna see ranking for?</h1>
+        <input id="search_text" type="text" placeholder="Game name here..." disabled/>
+
+        <div class="list"></div>
+    </main>
+</body>

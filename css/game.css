@@ -1,0 +1,66 @@
+@import 'style.css';
+@import 'overlay.css';
+@import 'loader.css';
+
+nav {
+    display: flex;
+}
+
+nav h2 {
+    margin-left: 25px;
+    margin-right: 25px;
+
+    color: #007bff;
+    text-decoration: none;
+}
+
+nav h2:hover {
+    cursor: pointer;
+    color: lightgrey;
+    text-decoration: underline;
+}
+
+nav h2[active] {
+    cursor: auto;
+    color: lightgrey;
+    text-decoration: none;
+}
+
+hr {
+    border: 0.25px solid black;
+    width: 90%;
+    padding: 0;
+    margin: 0;
+}
+
+.tab {
+    display: none;
+}
+
+.tab[active] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+
+tr:nth-child(even) {
+    background-color: #414549;
+  }
+
+td, th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+table th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
+    content: " \25B4\25BE" 
+}
