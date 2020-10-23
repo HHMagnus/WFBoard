@@ -45,7 +45,10 @@ function showPlayerOverlay(player, rank, runScores) {
 
         runView.querySelector('.place').innerText = runDetails.place;
         runView.querySelector('.type').innerText = type;
-        runView.querySelector('.leaderboard_name').innerText = runDetails.leaderboard_name;
+        let leaderboard_link = document.createElement('a');
+        leaderboard_link.href = runDetails.link;
+        leaderboard_link.innerText = runDetails.leaderboard_name;
+        runView.querySelector('.leaderboard_name').appendChild(leaderboard_link);
         runView.querySelector('.score').innerText = runDetails.score;
 
         runs.appendChild(runView);

@@ -9,6 +9,7 @@ function calculateLeaderboardScoresAndAdd(playerRanks, runScores, score_field_na
                 place: run.place,
                 score: run_score,
                 leaderboard_name: leaderboard.name,
+                link: run.run.weblink,
                 web_link: run.run.weblink
             };
             players.forEach(player => {
