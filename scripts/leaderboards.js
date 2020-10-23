@@ -121,7 +121,7 @@ function generateLeaderboards ( json ) {
         level.link = link;
 
         level.leaderboards = level.categories.flatMap (category => {
-            let relevant_variables = level.variables.filter(variable => variable.category == category.id);
+            let relevant_variables = level.variables.filter(variable => variable.category == null || variable.category == category.id);
             let all_variable_combinations = get_all_variable_combinations([...relevant_variables], []);
 
             if(all_variable_combinations.length < 1) {
