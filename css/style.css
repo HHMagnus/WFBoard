@@ -37,3 +37,7 @@ a, a:visited{
     border-radius: 5px;
     padding: 7px;
 }
+
+.report-bug:hover {
+    color: lightblue;
+}
