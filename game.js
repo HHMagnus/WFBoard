@@ -1,6 +1,6 @@
-import { getJsonFromUrl } from '/scripts/parseUrlParams.js';
-import populateView from '/scripts/populateView.js';
-import active_tabs from '/scripts/active_tabs.js';
+import { getJsonFromUrl } from './scripts/parseUrlParams.js';
+import populateView from './scripts/populateView.js';
+import active_tabs from './scripts/active_tabs.js';
 import fetchAll from './scripts/fetchAll.js';
 import calculateRankings from './scripts/calculateRankings.js';
 
