@@ -1,8 +1,8 @@
 import { getJsonFromUrl } from './scripts/parseUrlParams.js';
-import populateView from './scripts/populateView.js';
+import { populateView, cleanView, rankingSystemView } from './scripts/populateView.js';
 import active_tabs from './scripts/active_tabs.js';
 import fetchAll from './scripts/fetchAll.js';
-import calculateRankings from './scripts/calculateRankings.js';
+import { calculateRankings, score123, scoreElite, scoreElitex5, scoreProcentage, scoreWinnerTakeAll } from './scripts/calculateRankings.js';
 
 async function start() {
     let url_params = getJsonFromUrl();
@@ -34,16 +34,38 @@ async function start() {
     document.querySelector("#title").innerText = title;
     document.querySelector("#record_date").innerText = "("+record_date.toLocaleString()+")";
 
-    // Calculate ranking
-    let { playerRanks, runScores } = calculateRankings(json);
-
-    populateView(json, playerRanks, runScores);
-
-    console.log(json);
-    console.log(playerRanks);
-    console.log(runScores);
-
     active_tabs();
+
+    const show = (json, scoring_method) => {
+        let { playerRanks, runScores } = calculateRankings(json, scoring_method);
+        populateView(json, playerRanks, runScores);
+    }
+
+    show(json, score123);
+    rankingSystemView(score_method => {
+        cleanView();
+        let method = scoreElite;
+        switch (score_method) {
+            case 'top3':
+                method = score123;
+                break;
+            case 'elite':
+                method = scoreElite;
+                break;
+            case 'elitex5':
+                method = scoreElitex5;
+                break;
+            case 'winner_take_all':
+                method = scoreWinnerTakeAll;
+                break;
+            case 'procentage_based':
+                method = scoreProcentage;
+                break;
+            default:
+                method = score123
+        }
+        show(json, method);
+    });
 }
 
 async function store_in_localStorage(gameid, data) {

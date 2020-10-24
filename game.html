@@ -20,6 +20,53 @@
         Report a bug
     </a>
 
+    <!-- Ranking method -->
+    <a class="report-bug" id="ranking_system" style="margin-top: 50px;">
+        Ranking system
+    </a>
+
+    <!-- Ranking methoc overlay-->
+    <overlay id="ranking_method" style="display: none;" onclick="if(event.target == this) this.style.display = 'none';">
+        <div style="max-width: 75%; margin: auto; margin-top: 5px;">
+            <h1>Choose ranking system</h1>
+            <select class="select-css" id="score_select" style="margin-bottom: 10px;">
+                <option value="top3">Top 3</option>
+                <option value="elite">Elite</option>
+                <option value="elitex5">Elite x 5</option>
+                <option value="winner_take_all">Winner take all</option>
+                <option value="procentage_based">Procentage based</option>
+            </select>
+
+            <span id="top3-view" class="score_description" style="max-width: 500px;">
+                Rank 1 = 3 points <br> 
+                Rank 2 = 2 points <br> 
+                Rank 3 = 1 point
+            </span>
+
+            <span id="elite-view" class="score_description" style="max-width: 500px; display: none;">
+                Points = 100 - rank (minimum 0)
+            </span>
+
+            <span id="elitex5-view" class="score_description" style="max-width: 500px; display: none;">
+                Points = 100 - 5 * rank (minimum 0)
+            </span>
+
+            <span id="winner_take_all-view" class="score_description" style="max-width: 500px; display: none;">
+                Rank 1 = 1 point <br>
+                Rank # = 0 point
+            </span>
+
+            <span id="procentage_based-view" class="score_description" style="max-width: 500px; display: none;">
+                t = total runs in that category times 10<br>
+                Rank 1 = 50% * t <br>
+                Rank 2 = 33% * t <br>
+                Rank 3 = 17% * t <br>
+            </span>
+
+            <a id="apply_ranking" href="#" style="margin-top: 5px; border: 0.5px solid lightgrey; padding: 7px; border-radius: 5px; background-color: #313539;">Apply</a>
+        </div>
+    </overlay>
+
     <!-- Start loader -->
     <overlay id="loader">
         <div style="overflow:hidden !important;">
