@@ -14,14 +14,23 @@ async function start() {
         data = await fetchAll(gameid, (x, y) => fetch(x, y));
         await store_in_localStorage(gameid, data);
     } catch (err) {
+        console.log(err);
         // Try to load localStorage if online is unavailable
         try {
             console.log("Load from localStorage")
             let fromLocalStorage = await load_from_localStorage(gameid);
             data = JSON.parse(fromLocalStorage);
         } catch (err2) {
-            alert("The API has denied your request because of a rate limit. Please try again later!")
-            return;
+            console.log(err2);
+            try {
+                if(gameid != 'wf') throw 'Only Warframe backup supported!';
+                let res = await fetch('./workflow/wf.json');
+                data = await res.json();
+            }catch (err3 ){
+                console.log(err3);
+                alert("The API has denied your request because of a rate limit. Please try again later!")
+                return;
+            }
         }
     }
 
