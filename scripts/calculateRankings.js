@@ -1,10 +1,10 @@
-function calculateLeaderboardScoresAndAdd(playerRanks, runScores, score_field_name, runs_field_name) {
+function calculateLeaderboardScoresAndAdd(playerRanks, runScores, score_field_name, runs_field_name, scoring_method) {
     return (leaderboard) => {
         let playersAlreadyScoredForLeaderboard = [];
         leaderboard.data.runs.forEach(run => {
             let players = run.run.players.filter(player => !playersAlreadyScoredForLeaderboard.includes(player.id));
             playersAlreadyScoredForLeaderboard.push(...players.map(player => player.id));
-            let run_score = score(run.place, leaderboard.data.runs.length);
+            let run_score = scoring_method(run.place, leaderboard.data.runs.length);
             runScores[run.run.id] = {
                 place: run.place,
                 score: run_score,
@@ -56,7 +56,7 @@ function givePlacements(playerRanks) {
     givePlacement(playerRanks, "overall_score", "overall_place");
 } 
 
-export default (json) => {
+export function calculateRankings(json, scoring_method) {
     let playerRanks = {};
     json.players.forEach (player => {
         playerRanks[player.id] = {
@@ -69,8 +69,8 @@ export default (json) => {
 
     let runScores = {};
 
-    json.categories.flatMap(category => category.leaderboards).forEach ( calculateLeaderboardScoresAndAdd(playerRanks, runScores, "full_game_score", "full_game_runs") );
-    json.levels.flatMap(level => level.leaderboards).forEach( calculateLeaderboardScoresAndAdd(playerRanks, runScores, "level_score", "level_runs") );
+    json.categories.flatMap(category => category.leaderboards).forEach ( calculateLeaderboardScoresAndAdd(playerRanks, runScores, "full_game_score", "full_game_runs", scoring_method) );
+    json.levels.flatMap(level => level.leaderboards).forEach( calculateLeaderboardScoresAndAdd(playerRanks, runScores, "level_score", "level_runs", scoring_method) );
 
     playerRanks = formatPlayerRanksToArray(playerRanks);
 
@@ -81,12 +81,38 @@ export default (json) => {
     return {playerRanks, runScores};
 }
 
-function score (place, total_runs){
+export function score123 (place, total_runs) {
     if (place == 1)
         return 3;
     if (place == 2)
         return 2;
     if (place == 3)
         return 1;
+    return 0;
+}
+
+export function scoreElite(place, total_runs) {
+    let score = 100 - (place-1);
+    return Math.max(0, score);
+}
+
+export function scoreElitex5(place, total_runs) {
+    let score = 100 - ((place-1) * 5);
+    return Math.max(0, score);
+}
+
+export function scoreWinnerTakeAll(place, total_runs) {
+    if(place == 1) return 1;
+    return 0;
+}
+
+export function scoreProcentage(place, total_runs) {
+    const total = total_runs * 10;
+    if (place == 1) 
+        return Math.round(total * 0.5);
+    if (place == 2)
+        return Math.round(total * 0.33);
+    if (place == 3)
+        return Math.round(total * 0.17);
     return 0;
 }

@@ -13,6 +13,10 @@ const leaderboardScoreViewTemplate = document.querySelector("#leaderboardScoreVi
 const personalOverlayViewTemplate = document.querySelector("#personalOverlayView");
 const personalScoreViewTemplate = document.querySelector('#personalScoreView');
 
+const personal_table = document.querySelector("#personal_table");
+const level_table = document.querySelector(".level_table");
+const full_game_table = document.querySelector(".full_game_table");
+
 function playerLinkView(player_name, player_profile) {
     let player_element = player_profile != undefined ? document.createElement("a") : document.createElement('span');
     if(player_profile) player_element.href = player_profile;
@@ -87,7 +91,7 @@ function populatePersonalRankings (json, playerRanks, runScores) {
 
     });
 
-    sorttable.makeSortable(document.querySelector("#personal_table"));
+    sorttable.makeSortable(personal_table);
 }
 
 function showLeaderboardOverlay(json, leaderboard, runScores) {
@@ -162,7 +166,6 @@ function populateLevels(json, runScores) {
         });
     });
 
-    let level_table = document.querySelector(".level_table");
     sorttable.makeSortable(level_table);
 }
 
@@ -189,11 +192,10 @@ function populateFullGame(json, runScores) {
         });
     });
 
-    let full_game_table = document.querySelector(".full_game_table");
     sorttable.makeSortable(full_game_table);
 }
 
-export default (json, playerRanks, runScores) => {
+export function populateView (json, playerRanks, runScores) {
     populatePersonalRankings(json, playerRanks, runScores);
     populateLevels(json, runScores);
     populateFullGame(json, runScores);
@@ -202,3 +204,44 @@ export default (json, playerRanks, runScores) => {
 }
 
 function removeLoader() { document.querySelector("#loader").style.display = "none"; }
+
+export function cleanView() {
+    const remove_sortable = table => {
+        const cells = table.getElementsByTagName('thead')[0].rows[0].cells;
+        for(let i = 0; i < cells.length; i++){
+            const cell = cells[i];
+            const new_cell = cell.cloneNode(true);
+            cell.parentNode.replaceChild(new_cell, cell);
+        }
+    }
+    personal_tbody.innerHTML = "";
+    remove_sortable(personal_table);
+    level_tbody.innerHTML = "";
+    remove_sortable(level_table);
+    full_game_tbody.innerHTML = "";
+    remove_sortable(full_game_table);
+}
+
+export function rankingSystemView(applyRankingSystem) {
+    // Show overlay on click
+    const ranking_system_button = document.querySelector('#ranking_system');
+    ranking_system_button.addEventListener('click', (ev) => {
+        document.querySelector('#ranking_method').style.display = 'block';
+    });
+
+    // Show description depending on selected option
+    const score_select = document.querySelector('#score_select');
+    score_select.addEventListener('change', (ev) => {
+        document.querySelectorAll('.score_description').forEach(x => {
+            x.style.display = 'none';
+        })
+        document.querySelector('#' + score_select.value + '-view').style.display = 'block';
+    });
+
+    // apply button
+    const apply = document.querySelector('#apply_ranking');
+    apply.addEventListener('click', (ev) => {
+        document.querySelector('#ranking_method').style.display = 'none';
+        applyRankingSystem(score_select.value);
+    });
+}
