@@ -53,7 +53,7 @@ function showPlayerOverlay(player, rank, runScores) {
     visit_profile.href = player.rel == 'guest' ? player.uri : player.weblink;
     
     const runs_table = personalOverlayView.querySelector('.runs_table');
-    sorttable.makeSortable(runs_table);
+    ts_makeSortable.makeSortable(runs_table);
 
     document.body.appendChild(personalOverlayView);
 }
@@ -91,7 +91,7 @@ function populatePersonalRankings (json, playerRanks, runScores) {
 
     });
 
-    sorttable.makeSortable(personal_table);
+    ts_makeSortable.makeSortable(personal_table);
 }
 
 function showLeaderboardOverlay(json, leaderboard, runScores) {
@@ -166,7 +166,7 @@ function populateLevels(json, runScores) {
         });
     });
 
-    sorttable.makeSortable(level_table);
+    ts_makeSortable.makeSortable(level_table);
 }
 
 function populateFullGame(json, runScores) {
@@ -192,7 +192,7 @@ function populateFullGame(json, runScores) {
         });
     });
 
-    sorttable.makeSortable(full_game_table);
+    ts_makeSortable.makeSortable(full_game_table);
 }
 
 export function populateView (json, playerRanks, runScores) {
